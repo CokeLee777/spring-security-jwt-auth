@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class JwtSecurityConfiguration {
 
-    private static final String[] PUBLIC_END_POINT = {"/", "/sign-in/**", "/sign-up/**", "/error"};
+    private static final String[] PUBLIC_END_POINT = {"/", "/sign-in", "/sign-up", "/error"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
