@@ -8,5 +8,6 @@ public interface DefaultHttpMessage {
     String NOT_FOUND = "페이지 요청이 존재하지 않습니다.";
     String METHOD_NOT_ALLOWED = "허용되지 않은 HTTP 메서드 입니다.";
     String CONFLICT = "중복된 요청입니다.";
+    String UNSUPPORTED_MEDIA_TYPE = "허용되지 않은 컨텐츠 타입입니다.";
     String INTERNAL_SERVER_ERROR = "서버 내부 오류";
 }
