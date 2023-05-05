@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService memoryUserService;
+    private final UserService userService;
 
     @PostMapping("/sign-up")
     public ResponseEntity<SuccessResponseBody<Void>> signUp(@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
-        memoryUserService.createUser(signUpRequestDto);
+        userService.createUser(signUpRequestDto);
         return ResponseEntity.ok()
                 .body(new SuccessResponseBody<>(HttpStatus.OK.name(), DefaultHttpMessage.OK, null));
     }

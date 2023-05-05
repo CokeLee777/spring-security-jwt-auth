@@ -1,11 +1,13 @@
 package io.github.cokelee777.springsecurityjwtauth.repository;
 
 import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Primary
 @Repository
 public class MemoryUserRepository implements UserRepository<MemoryUser> {
 
