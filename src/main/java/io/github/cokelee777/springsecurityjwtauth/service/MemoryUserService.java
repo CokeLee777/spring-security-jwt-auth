@@ -22,11 +22,10 @@ public class MemoryUserService implements UserService {
             throw new DuplicateIdentifierException("중복된 아이디 입니다");
         }
 
-        String nickname = signUpRequestDto.nickname() == null ? "" : signUpRequestDto.nickname();
         MemoryUser memoryUser = MemoryUser.builder()
                 .identifier(signUpRequestDto.identifier())
                 .password(signUpRequestDto.password())
-                .nickname(nickname)
+                .nickname(signUpRequestDto.nickname())
                 .build();
         userRepository.save(memoryUser);
     }

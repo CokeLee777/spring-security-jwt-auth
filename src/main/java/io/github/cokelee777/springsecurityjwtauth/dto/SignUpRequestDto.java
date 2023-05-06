@@ -18,4 +18,9 @@ public record SignUpRequestDto(
         @Nullable
         String nickname
 ) {
+
+        @Override
+        public String nickname() {
+                return (nickname != null) ? nickname : "";
+        }
 }
