@@ -4,16 +4,18 @@ import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.dto.SignUpRequestDto;
 import io.github.cokelee777.springsecurityjwtauth.exception.DuplicateIdentifierException;
 import io.github.cokelee777.springsecurityjwtauth.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 @Primary
 @Service
-@RequiredArgsConstructor
 public class MemoryUserService implements UserService {
 
     private final UserRepository<MemoryUser> userRepository;
+
+    public MemoryUserService(UserRepository<MemoryUser> userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void createUser(SignUpRequestDto signUpRequestDto) {
@@ -22,11 +24,11 @@ public class MemoryUserService implements UserService {
             throw new DuplicateIdentifierException("중복된 아이디 입니다");
         }
 
-        MemoryUser memoryUser = MemoryUser.builder()
-                .identifier(signUpRequestDto.identifier())
-                .password(signUpRequestDto.password())
-                .nickname(signUpRequestDto.nickname())
-                .build();
+        MemoryUser memoryUser = new MemoryUser(
+                signUpRequestDto.identifier(),
+                signUpRequestDto.password(),
+                signUpRequestDto.nickname()
+        );
         userRepository.save(memoryUser);
     }
 }

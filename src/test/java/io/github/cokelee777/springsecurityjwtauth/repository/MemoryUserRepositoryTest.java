@@ -26,11 +26,11 @@ class MemoryUserRepositoryTest {
     @Test
     void save() {
         // given
-        MemoryUser memoryUser = MemoryUser.builder()
-                .identifier("user123@naver.com")
-                .password("user123!")
-                .nickname("testuser")
-                .build();
+        MemoryUser memoryUser = new MemoryUser(
+                "user123@naver.com",
+                "user123!",
+                "testuser"
+        );
 
         // when
         memoryUserRepository.save(memoryUser);
@@ -42,11 +42,11 @@ class MemoryUserRepositoryTest {
     @Test
     void existsByIdentifier() {
         // given
-        MemoryUser memoryUser = MemoryUser.builder()
-                .identifier("existUser123@naver.com")
-                .password("existUser123!")
-                .nickname("existUser")
-                .build();
+        MemoryUser memoryUser = new MemoryUser(
+                "existUser123@naver.com",
+                "existUser123!",
+                "existUser"
+        );
         memoryUserRepository.save(memoryUser);
 
         // when
