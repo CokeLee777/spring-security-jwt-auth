@@ -1,1 +1,12 @@
+server:
+  error:
+    whitelabel:
+      enabled: false
 
+# 커스텀 NOT FOUND ERROR를 생성하기 위해 기본 page not found exception 제거
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
