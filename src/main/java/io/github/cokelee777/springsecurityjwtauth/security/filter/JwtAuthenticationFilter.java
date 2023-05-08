@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.cokelee777.springsecurityjwtauth.dto.SignInRequestDto;
 import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtAuthenticationToken;
 import jakarta.annotation.Nonnull;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
@@ -30,7 +29,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, ServletException {
+            throws AuthenticationException {
         // 클라이언트 요청 검증
         SignInRequestDto signInRequestDto;
         try {
