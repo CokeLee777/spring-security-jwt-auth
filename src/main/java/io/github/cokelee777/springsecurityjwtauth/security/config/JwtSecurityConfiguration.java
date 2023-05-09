@@ -2,6 +2,7 @@ package io.github.cokelee777.springsecurityjwtauth.security.config;
 
 import io.github.cokelee777.springsecurityjwtauth.security.filter.JwtAuthenticationFilter;
 import io.github.cokelee777.springsecurityjwtauth.security.provider.JwtAuthenticationProvider;
+import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -20,11 +20,11 @@ public class JwtSecurityConfiguration {
 
     private static final String[] PUBLIC_END_POINT = {"/", "/sign-in", "/sign-up", "/error"};
 
-    private final UserDetailsService userDetailsService;
+    private final PrincipalUserDetailsService jwtUserDetailsService;
     private final PasswordEncoder passwordEncoder;
 
-    public JwtSecurityConfiguration(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        this.userDetailsService = userDetailsService;
+    public JwtSecurityConfiguration(PrincipalUserDetailsService jwtUserDetailsService, PasswordEncoder passwordEncoder) {
+        this.jwtUserDetailsService = jwtUserDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -58,7 +58,7 @@ public class JwtSecurityConfiguration {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager);
             http.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
-                    .authenticationProvider(new JwtAuthenticationProvider(userDetailsService, passwordEncoder));
+                    .authenticationProvider(new JwtAuthenticationProvider(jwtUserDetailsService, passwordEncoder));
         }
     }
 

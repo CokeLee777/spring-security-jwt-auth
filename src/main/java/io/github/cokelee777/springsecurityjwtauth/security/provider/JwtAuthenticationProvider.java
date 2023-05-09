@@ -9,16 +9,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private final UserDetailsService jwtUserDetailsService;
-    private final PasswordEncoder bcryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public JwtAuthenticationProvider(UserDetailsService jwtUserDetailsService, PasswordEncoder bcryptPasswordEncoder) {
-        this.bcryptPasswordEncoder = bcryptPasswordEncoder;
+    public JwtAuthenticationProvider(UserDetailsService jwtUserDetailsService, PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
         this.jwtUserDetailsService = jwtUserDetailsService;
     }
 
@@ -29,7 +27,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String password = determinePassword(authentication);
 
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(identifier);
-        if (!bcryptPasswordEncoder.matches(password, userDetails.getPassword())) {
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다");
         }
 

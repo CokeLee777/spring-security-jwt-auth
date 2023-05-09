@@ -1,14 +1,10 @@
 package io.github.cokelee777.springsecurityjwtauth.repository;
 
 import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 import java.util.Optional;
 
-@Primary
-@Repository
 public class MemoryUserRepository implements UserRepository<MemoryUser> {
 
     private final Map<String, MemoryUser> memoryStore;

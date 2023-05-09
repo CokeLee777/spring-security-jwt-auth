@@ -4,9 +4,7 @@ import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
-@Service
 public class JwtMemoryUserDetailsService implements JwtUserDetailsService<MemoryUser> {
 
     private final UserRepository<MemoryUser> userRepository;
