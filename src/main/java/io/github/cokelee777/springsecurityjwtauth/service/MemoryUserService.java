@@ -5,6 +5,7 @@ import io.github.cokelee777.springsecurityjwtauth.dto.SignUpRequestDto;
 import io.github.cokelee777.springsecurityjwtauth.exception.DuplicateIdentifierException;
 import io.github.cokelee777.springsecurityjwtauth.repository.UserRepository;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Primary
@@ -12,9 +13,11 @@ import org.springframework.stereotype.Service;
 public class MemoryUserService implements UserService {
 
     private final UserRepository<MemoryUser> userRepository;
+    private final PasswordEncoder bcryptPasswordEncoder;
 
-    public MemoryUserService(UserRepository<MemoryUser> userRepository) {
+    public MemoryUserService(UserRepository<MemoryUser> userRepository, PasswordEncoder bcryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.bcryptPasswordEncoder = bcryptPasswordEncoder;
     }
 
     @Override
@@ -26,9 +29,13 @@ public class MemoryUserService implements UserService {
 
         MemoryUser memoryUser = new MemoryUser(
                 signUpRequestDto.identifier(),
-                signUpRequestDto.password(),
+                getBcryptPassword(signUpRequestDto.password()),
                 signUpRequestDto.nickname()
         );
         userRepository.save(memoryUser);
+    }
+
+    private String getBcryptPassword(String originalPassword) {
+        return bcryptPasswordEncoder.encode(originalPassword);
     }
 }
