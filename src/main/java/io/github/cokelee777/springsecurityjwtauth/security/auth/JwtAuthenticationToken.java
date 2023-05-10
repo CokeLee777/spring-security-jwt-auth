@@ -1,7 +1,6 @@
 package io.github.cokelee777.springsecurityjwtauth.security.auth;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
@@ -29,14 +28,14 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     // 인증 처리 전 호출
-    public static UsernamePasswordAuthenticationToken unauthenticated(Object principal, Object credentials) {
-        return new UsernamePasswordAuthenticationToken(principal, credentials);
+    public static JwtAuthenticationToken unauthenticated(Object principal, Object credentials) {
+        return new JwtAuthenticationToken(principal, credentials);
     }
 
     // 인증 처리 후 호출(인증이 완료되었다고 setAuthenticated를 true로 변경 후 호출)
-    public static UsernamePasswordAuthenticationToken authenticated(
+    public static JwtAuthenticationToken authenticated(
             Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
-        return new UsernamePasswordAuthenticationToken(principal, credentials, authorities);
+        return new JwtAuthenticationToken(principal, credentials, authorities);
     }
 
     @Override

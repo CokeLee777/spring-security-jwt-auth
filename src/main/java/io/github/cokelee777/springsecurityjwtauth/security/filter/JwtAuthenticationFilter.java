@@ -7,8 +7,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -19,12 +19,13 @@ import java.io.IOException;
 
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private static final String SIGN_IN_END_POINT = "/sign-in";
+    private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER =
+            new AntPathRequestMatcher("/sign-in", HttpMethod.POST.name());
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public JwtAuthenticationFilter() {
-        super(new AntPathRequestMatcher(SIGN_IN_END_POINT, HttpMethod.POST.name()));
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+        super(DEFAULT_ANT_PATH_REQUEST_MATCHER, authenticationManager);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         String identifier = validateAndObtainIdentifier(signInRequestDto);
         String password = validateAndObtainPassword(signInRequestDto);
 
-        UsernamePasswordAuthenticationToken authRequest = JwtAuthenticationToken.unauthenticated(identifier, password);
+        JwtAuthenticationToken authRequest = JwtAuthenticationToken.unauthenticated(identifier, password);
 
         return this.getAuthenticationManager().authenticate(authRequest);
     }

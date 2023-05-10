@@ -1,11 +1,16 @@
 package io.github.cokelee777.springsecurityjwtauth.security.config;
 
 import io.github.cokelee777.springsecurityjwtauth.security.filter.JwtAuthenticationFilter;
+import io.github.cokelee777.springsecurityjwtauth.security.provider.JwtAuthenticationProvider;
+import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
@@ -14,6 +19,14 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 public class JwtSecurityConfiguration {
 
     private static final String[] PUBLIC_END_POINT = {"/", "/sign-in", "/sign-up", "/error"};
+
+    private final PrincipalUserDetailsService jwtUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
+
+    public JwtSecurityConfiguration(PrincipalUserDetailsService jwtUserDetailsService, PasswordEncoder passwordEncoder) {
+        this.jwtUserDetailsService = jwtUserDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,9 +44,22 @@ public class JwtSecurityConfiguration {
             .requestMatchers(PUBLIC_END_POINT).permitAll()
             .anyRequest().authenticated();
 
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter();
-        http.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class);
+        // JWT DSL 추가
+        http.apply(new JwtCustomDsl());
 
         return http.build();
     }
+
+    // 공유객체에서 AuthenticationManager를 가져와 사용하기 위해 CustomDSL 정의
+    public class JwtCustomDsl extends AbstractHttpConfigurer<JwtCustomDsl, HttpSecurity> {
+
+        @Override
+        public void configure(HttpSecurity http) {
+            AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager);
+            http.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
+                    .authenticationProvider(new JwtAuthenticationProvider(jwtUserDetailsService, passwordEncoder));
+        }
+    }
+
 }
