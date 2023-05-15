@@ -8,7 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collection;
 import java.util.List;
 
-public class JwtMemoryUserDetails implements JwtUserDetails<MemoryUser> {
+public class JwtMemoryUserDetails implements JwtUserDetails {
 
     private final MemoryUser memoryUser;
 

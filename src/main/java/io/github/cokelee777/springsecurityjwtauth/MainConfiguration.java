@@ -3,17 +3,13 @@ package io.github.cokelee777.springsecurityjwtauth;
 import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.repository.MemoryUserRepository;
 import io.github.cokelee777.springsecurityjwtauth.repository.UserRepository;
-import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtMemoryUserDetails;
 import io.github.cokelee777.springsecurityjwtauth.security.service.JwtMemoryUserDetailsService;
 import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
-import io.github.cokelee777.springsecurityjwtauth.security.token.creator.JwtTokenCreator;
+import io.github.cokelee777.springsecurityjwtauth.security.token.creator.MemoryJwtTokenCreator;
 import io.github.cokelee777.springsecurityjwtauth.security.token.creator.TokenCreator;
-import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtAccessToken;
-import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtRefreshToken;
-import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtToken;
-import io.github.cokelee777.springsecurityjwtauth.security.token.provider.JwtTokenProvider;
+import io.github.cokelee777.springsecurityjwtauth.security.token.provider.MemoryJwtTokenProvider;
 import io.github.cokelee777.springsecurityjwtauth.security.token.provider.TokenProvider;
-import io.github.cokelee777.springsecurityjwtauth.security.token.service.JwtTokenService;
+import io.github.cokelee777.springsecurityjwtauth.security.token.service.MemoryJwtTokenService;
 import io.github.cokelee777.springsecurityjwtauth.security.token.service.TokenService;
 import io.github.cokelee777.springsecurityjwtauth.service.MemoryUserService;
 import io.github.cokelee777.springsecurityjwtauth.service.UserService;
@@ -55,11 +51,14 @@ public class MainConfiguration {
     }
 
     @Bean
-    public TokenCreator<JwtMemoryUserDetails, JwtAccessToken, JwtRefreshToken> jwtTokenCreator() { return new JwtTokenCreator(); }
+    @SuppressWarnings("unchecked")
+    public <T extends TokenCreator> T tokenCreator() { return (T) new MemoryJwtTokenCreator(); }
 
     @Bean
-    public TokenProvider<JwtMemoryUserDetails, JwtToken, JwtRefreshToken> jwtTokenProvider() { return new JwtTokenProvider(jwtTokenCreator()); }
+    @SuppressWarnings("unchecked")
+    public <T extends TokenProvider> T tokenProvider() { return (T) new MemoryJwtTokenProvider(tokenCreator()); }
 
     @Bean
-    public TokenService<JwtMemoryUserDetails, JwtToken, JwtRefreshToken> jwtTokenService() { return new JwtTokenService(jwtTokenProvider()); }
+    @SuppressWarnings("unchecked")
+    public <T extends TokenService> T tokenService() { return (T) new MemoryJwtTokenService(tokenProvider()); }
 }

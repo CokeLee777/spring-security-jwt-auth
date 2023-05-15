@@ -1,6 +1,9 @@
 package io.github.cokelee777.springsecurityjwtauth.security.token.domain;
 
-public interface Token<T> {
+import java.util.Date;
 
-    T getToken();
+public interface Token {
+
+    Date createdAt = new Date();
+
 }

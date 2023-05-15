@@ -1,32 +1,13 @@
 package io.github.cokelee777.springsecurityjwtauth.security.token.provider;
 
-import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtMemoryUserDetails;
-import io.github.cokelee777.springsecurityjwtauth.security.token.creator.TokenCreator;
-import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtAccessToken;
-import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtRefreshToken;
-import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtToken;
+import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtUserDetails;
+import io.github.cokelee777.springsecurityjwtauth.security.token.domain.AccessToken;
+import io.github.cokelee777.springsecurityjwtauth.security.token.domain.RefreshToken;
 
-public class JwtTokenProvider implements TokenProvider<JwtMemoryUserDetails, JwtToken, JwtRefreshToken>{
+public interface JwtTokenProvider<T extends JwtUserDetails> extends TokenProvider {
 
-    private final TokenCreator<JwtMemoryUserDetails, JwtAccessToken, JwtRefreshToken> jwtTokenCreator;
+    <R extends AccessToken> R getAccessToken(T jwtUserDetails);
 
-    public JwtTokenProvider(TokenCreator<JwtMemoryUserDetails, JwtAccessToken, JwtRefreshToken> jwtTokenCreator) {
-        this.jwtTokenCreator = jwtTokenCreator;
-    }
-
-    @Override
-    public JwtToken getNewToken(JwtMemoryUserDetails user) {
-        JwtAccessToken accessToken = jwtTokenCreator.createAccessToken(user);
-        JwtRefreshToken refreshToken = jwtTokenCreator.createRefreshToken(user);
-
-        JwtToken jwtToken = new JwtToken(accessToken, refreshToken);
-
-        return jwtToken;
-    }
-
-    @Override
-    public JwtRefreshToken getAccessTokenByRefreshToken(JwtMemoryUserDetails user) {
-        return jwtTokenCreator.createRefreshToken(user);
-    }
+    <R extends RefreshToken> R getRefreshToken(T jwtUserDetails);
 
 }
