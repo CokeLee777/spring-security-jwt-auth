@@ -1,6 +1,5 @@
 package io.github.cokelee777.springsecurityjwtauth.security.token.creator;
 
-import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtMemoryUserDetails;
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtAccessToken;
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtRefreshToken;
@@ -23,14 +22,13 @@ public class JwtTokenCreator implements TokenCreator<JwtMemoryUserDetails, JwtAc
     @Override
     public JwtAccessToken createAccessToken(JwtMemoryUserDetails userDetails) {
         Date now = new Date();
-        MemoryUser memoryUser = userDetails.getMemoryUser();
         return new JwtAccessToken(HEADER_PREFIX +
                 HEADER_ACCESS_KEY +
                 Jwts.builder()
-                .setSubject(memoryUser.getId())
-                .setSubject(memoryUser.getIdentifier())
-                .setSubject(memoryUser.getNickname())
-                .setSubject(memoryUser.getRole().toString())
+                .setSubject(userDetails.getId())
+                .setSubject(userDetails.getUsername())
+                .setSubject(userDetails.getNickname())
+                .setSubject(userDetails.getRole().toString())
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRED_TIME))
                 .signWith(SECRET_KEY)
@@ -41,14 +39,13 @@ public class JwtTokenCreator implements TokenCreator<JwtMemoryUserDetails, JwtAc
     @Override
     public JwtRefreshToken createRefreshToken(JwtMemoryUserDetails userDetails) {
         Date now = new Date();
-        MemoryUser memoryUser = userDetails.getMemoryUser();
         return new JwtRefreshToken(HEADER_PREFIX +
                 HEADER_REFRESH_KEY +
                 Jwts.builder()
-                .setSubject(memoryUser.getId())
-                .setSubject(memoryUser.getIdentifier())
-                .setSubject(memoryUser.getNickname())
-                .setSubject(memoryUser.getRole().toString())
+                .setSubject(userDetails.getId())
+                .setSubject(userDetails.getUsername())
+                .setSubject(userDetails.getNickname())
+                .setSubject(userDetails.getRole().toString())
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRED_TIME))
                 .signWith(REFRESH_KEY)

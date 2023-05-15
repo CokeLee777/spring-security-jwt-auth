@@ -1,6 +1,7 @@
 package io.github.cokelee777.springsecurityjwtauth.security.auth;
 
 import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
+import io.github.cokelee777.springsecurityjwtauth.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -13,6 +14,18 @@ public class JwtMemoryUserDetails implements JwtUserDetails<MemoryUser> {
 
     public JwtMemoryUserDetails(MemoryUser memoryUser) {
         this.memoryUser = memoryUser;
+    }
+
+    public String getId() {
+        return memoryUser.getId();
+    }
+
+    public String getNickname() {
+        return memoryUser.getNickname();
+    }
+
+    public UserRole getRole() {
+        return memoryUser.getRole();
     }
 
     @Override
