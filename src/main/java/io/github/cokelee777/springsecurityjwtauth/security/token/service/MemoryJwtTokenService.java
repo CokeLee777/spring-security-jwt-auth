@@ -15,15 +15,15 @@ public class MemoryJwtTokenService implements JwtTokenService<JwtMemoryUserDetai
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends AccessToken> T issueAccessToken(JwtMemoryUserDetails jwtUserDetails) {
+    public <S extends AccessToken> S issueAccessToken(JwtMemoryUserDetails jwtUserDetails) {
         AccessToken accessToken = memoryJwtTokenProvider.getAccessToken(jwtUserDetails);
-        return (T) accessToken;
+        return (S) accessToken;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends RefreshToken> T issueRefreshToken(JwtMemoryUserDetails jwtUserDetails) {
+    public <U extends RefreshToken> U issueRefreshToken(JwtMemoryUserDetails jwtUserDetails) {
         RefreshToken refreshToken = memoryJwtTokenProvider.getRefreshToken(jwtUserDetails);
-        return (T) refreshToken;
+        return (U) refreshToken;
     }
 }

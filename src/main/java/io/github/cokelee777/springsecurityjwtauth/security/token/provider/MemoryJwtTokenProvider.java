@@ -17,15 +17,15 @@ public class MemoryJwtTokenProvider implements JwtTokenProvider<JwtMemoryUserDet
 
     @SuppressWarnings("unchecked")
     @Override
-    public <R extends AccessToken> R getAccessToken(JwtMemoryUserDetails jwtUserDetails) {
+    public <S extends AccessToken> S getAccessToken(JwtMemoryUserDetails jwtUserDetails) {
         String accessToken = memoryJwtTokenCreator.createAccessToken(jwtUserDetails);
-        return (R) new JwtAccessToken(accessToken);
+        return (S) new JwtAccessToken(accessToken);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <R extends RefreshToken> R getRefreshToken(JwtMemoryUserDetails jwtUserDetails) {
+    public <U extends RefreshToken> U getRefreshToken(JwtMemoryUserDetails jwtUserDetails) {
         String refreshToken = memoryJwtTokenCreator.createRefreshToken(jwtUserDetails);
-        return (R) new JwtRefreshToken(refreshToken);
+        return (U) new JwtRefreshToken(refreshToken);
     }
 }

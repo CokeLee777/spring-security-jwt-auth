@@ -4,9 +4,9 @@ import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtUserDetails;
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.AccessToken;
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.RefreshToken;
 
-public interface JwtTokenService<U extends JwtUserDetails> extends TokenService {
+public interface JwtTokenService<T extends JwtUserDetails> extends TokenService {
 
-    <T extends AccessToken> T issueAccessToken(U jwtUserDetails);
+    <S extends AccessToken> S issueAccessToken(T jwtUserDetails);
 
-    <T extends RefreshToken> T issueRefreshToken(U jwtUserDetails);
+    <U extends RefreshToken> U issueRefreshToken(T jwtUserDetails);
 }
