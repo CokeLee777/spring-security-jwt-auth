@@ -17,9 +17,9 @@ public class MemoryJwtTokenProvider implements JwtTokenProvider<JwtMemoryUserDet
 
     @SuppressWarnings("unchecked")
     @Override
-    public <R extends AccessToken> R getAccessToken(JwtMemoryUserDetails jwtUserDetails) {
+    public <A extends AccessToken> A getAccessToken(JwtMemoryUserDetails jwtUserDetails) {
         String accessToken = memoryJwtTokenCreator.createAccessToken(jwtUserDetails);
-        return (R) new JwtAccessToken(accessToken);
+        return (A) new JwtAccessToken(accessToken);
     }
 
     @SuppressWarnings("unchecked")
