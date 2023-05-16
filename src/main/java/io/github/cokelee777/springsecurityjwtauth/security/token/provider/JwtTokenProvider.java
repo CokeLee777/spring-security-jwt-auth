@@ -6,7 +6,7 @@ import io.github.cokelee777.springsecurityjwtauth.security.token.domain.RefreshT
 
 public interface JwtTokenProvider<T extends JwtUserDetails> extends TokenProvider {
 
-    <A extends AccessToken> A getAccessToken(T jwtUserDetails);
+    <R extends AccessToken> R getAccessToken(T jwtUserDetails);
 
     <R extends RefreshToken> R getRefreshToken(T jwtUserDetails);
 
