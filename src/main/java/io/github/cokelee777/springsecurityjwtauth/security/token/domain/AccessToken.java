@@ -17,7 +17,7 @@ public abstract class AccessToken implements Token {
     private Date getDefaultExpiredAt() {
         return new Date(this.createdAt.getTime() + ACCESS_TOKEN_EXPIRED_TIME);
     }
-    
+
     public String getValue() {
         return value;
     }

@@ -1,6 +1,8 @@
 package io.github.cokelee777.springsecurityjwtauth.security.config;
 
 import io.github.cokelee777.springsecurityjwtauth.security.filter.JwtAuthenticationFilter;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.CustomAuthenticationFailureHandler;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.success.CustomAuthenticationSuccessHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.provider.JwtAuthenticationProvider;
 import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
 import org.springframework.context.annotation.Bean;
@@ -22,10 +24,14 @@ public class JwtSecurityConfiguration {
 
     private final PrincipalUserDetailsService jwtUserDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
-    public JwtSecurityConfiguration(PrincipalUserDetailsService jwtUserDetailsService, PasswordEncoder passwordEncoder) {
+    public JwtSecurityConfiguration(PrincipalUserDetailsService jwtUserDetailsService, PasswordEncoder passwordEncoder, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler, CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+        this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
     }
 
     @Bean
@@ -57,9 +63,10 @@ public class JwtSecurityConfiguration {
         public void configure(HttpSecurity http) {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager);
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
             http.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
                     .authenticationProvider(new JwtAuthenticationProvider(jwtUserDetailsService, passwordEncoder));
         }
     }
-
 }
