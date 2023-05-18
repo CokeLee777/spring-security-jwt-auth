@@ -33,7 +33,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         // 인증 완료시 authenticated 메서드 호출
         return JwtAuthenticationToken
-                .authenticated(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+                .authenticated(userDetails, null, userDetails.getAuthorities());
     }
 
     // 인증 객체가 Jwt 인증 토큰과 정확히 일치할 경우만 true
