@@ -17,4 +17,8 @@ public abstract class RefreshToken implements Token {
     private Date getDefaultExpiredAt() {
         return new Date(this.createdAt.getTime() + REFRESH_TOKEN_EXPIRED_TIME);
     }
+
+    public String getValue() {
+        return value;
+    }
 }

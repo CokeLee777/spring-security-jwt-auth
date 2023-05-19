@@ -3,6 +3,10 @@ package io.github.cokelee777.springsecurityjwtauth;
 import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.repository.MemoryUserRepository;
 import io.github.cokelee777.springsecurityjwtauth.repository.UserRepository;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.CustomAuthenticationFailureHandler;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.JwtAuthenticationFailureHandler;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.success.CustomAuthenticationSuccessHandler;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.success.JwtMemoryAuthenticationSuccessHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.service.JwtMemoryUserDetailsService;
 import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
 import io.github.cokelee777.springsecurityjwtauth.security.token.creator.MemoryJwtTokenCreator;
@@ -61,4 +65,14 @@ public class MainConfiguration {
     @Bean
     @SuppressWarnings("unchecked")
     public <T extends TokenService> T tokenService() { return (T) new MemoryJwtTokenService(tokenProvider()); }
+
+    @Bean
+    public CustomAuthenticationFailureHandler customAuthenticationFailureHandler() {
+        return new JwtAuthenticationFailureHandler();
+    }
+
+    @Bean
+    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new JwtMemoryAuthenticationSuccessHandler(tokenService());
+    }
 }

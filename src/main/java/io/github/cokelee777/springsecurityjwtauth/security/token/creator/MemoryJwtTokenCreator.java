@@ -10,11 +10,12 @@ import java.util.UUID;
 import static io.github.cokelee777.springsecurityjwtauth.security.token.common.TokenProperties.*;
 
 public class MemoryJwtTokenCreator implements JwtTokenCreator<JwtMemoryUserDetails> {
+
     @Override
     public String createAccessToken(JwtMemoryUserDetails jwtMemoryUserDetails) {
         Date now = new Date();
         Claims claims = setClaims(jwtMemoryUserDetails);
-        return TOKEN_PREFIX + Jwts.builder()
+        return ACCESS_TOKEN_PREFIX + Jwts.builder()
                 .setSubject(jwtMemoryUserDetails.getId())
                 .setClaims(claims)
                 .setIssuedAt(now)
@@ -27,7 +28,7 @@ public class MemoryJwtTokenCreator implements JwtTokenCreator<JwtMemoryUserDetai
     public String createRefreshToken(JwtMemoryUserDetails jwtMemoryUserDetails) {
         Date now = new Date();
         Claims claims = setClaims(jwtMemoryUserDetails);
-        return TOKEN_PREFIX + Jwts.builder()
+        return Jwts.builder()
                 .setSubject(jwtMemoryUserDetails.getId())
                 .setClaims(claims)
                 .setIssuedAt(now)
