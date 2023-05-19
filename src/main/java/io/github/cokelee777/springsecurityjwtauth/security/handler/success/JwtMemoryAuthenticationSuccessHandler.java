@@ -38,9 +38,9 @@ public class JwtMemoryAuthenticationSuccessHandler implements JwtAuthenticationS
         JwtAccessToken accessToken = memoryJwtTokenService.issueAccessToken(jwtMemoryUserDetails);
         JwtRefreshToken refreshToken = memoryJwtTokenService.issueRefreshToken(jwtMemoryUserDetails);
 
-        setDefaultResponse(response);
         setHeaderWithJwtAccessToken(response, accessToken);
         setCookieWithJwtRefreshToken(response, refreshToken);
+        setDefaultResponse(response);
     }
 
     @Override
