@@ -1,23 +1,24 @@
 package io.github.cokelee777.springsecurityjwtauth.security.provider;
 
 import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtAuthenticationToken;
+import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    private final UserDetailsService jwtUserDetailsService;
+    private final PrincipalUserDetailsService principalUserDetailsService;
     private final PasswordEncoder passwordEncoder;
 
-    public JwtAuthenticationProvider(UserDetailsService jwtUserDetailsService, PasswordEncoder passwordEncoder) {
+    public JwtAuthenticationProvider(PrincipalUserDetailsService principalUserDetailsService,
+                                     PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-        this.jwtUserDetailsService = jwtUserDetailsService;
+        this.principalUserDetailsService = principalUserDetailsService;
     }
 
     // 실제 사용자 인증 수행
@@ -26,7 +27,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String identifier = determineIdentifier(authentication);
         String password = determinePassword(authentication);
 
-        UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(identifier);
+        UserDetails userDetails = principalUserDetailsService.loadUserByUsername(identifier);
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다");
         }

@@ -22,13 +22,16 @@ public class JwtSecurityConfiguration {
 
     private static final String[] PUBLIC_END_POINT = {"/", "/sign-in", "/sign-up", "/error"};
 
-    private final PrincipalUserDetailsService jwtUserDetailsService;
+    private final PrincipalUserDetailsService principalUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
-    public JwtSecurityConfiguration(PrincipalUserDetailsService jwtUserDetailsService, PasswordEncoder passwordEncoder, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler, CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
-        this.jwtUserDetailsService = jwtUserDetailsService;
+    public JwtSecurityConfiguration(PrincipalUserDetailsService principalUserDetailsService,
+                                    PasswordEncoder passwordEncoder,
+                                    CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler,
+                                    CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
+        this.principalUserDetailsService = principalUserDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
         this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
@@ -66,7 +69,7 @@ public class JwtSecurityConfiguration {
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);
             jwtAuthenticationFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
             http.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
-                    .authenticationProvider(new JwtAuthenticationProvider(jwtUserDetailsService, passwordEncoder));
+                    .authenticationProvider(new JwtAuthenticationProvider(principalUserDetailsService, passwordEncoder));
         }
     }
 }

@@ -35,44 +35,56 @@ public class MainConfiguration {
     }
 
     @Bean
-    public UserRepository<MemoryUser> userRepository() {
-        return new MemoryUserRepository(memoryStore());
-    }
-
-    @Bean
-    public UserService userService() {
-        return new MemoryUserService(userRepository(), passwordEncoder());
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public PrincipalUserDetailsService jwtUserDetailsService() {
-        return new JwtMemoryUserDetailsService(userRepository());
+    @SuppressWarnings("unchecked")
+    public <T extends UserRepository<MemoryUser>> T userRepository() {
+        return (T) new MemoryUserRepository(memoryStore());
     }
 
     @Bean
     @SuppressWarnings("unchecked")
-    public <T extends TokenCreator> T tokenCreator() { return (T) new MemoryJwtTokenCreator(); }
-
-    @Bean
-    @SuppressWarnings("unchecked")
-    public <T extends TokenProvider> T tokenProvider() { return (T) new MemoryJwtTokenProvider(tokenCreator()); }
-
-    @Bean
-    @SuppressWarnings("unchecked")
-    public <T extends TokenService> T tokenService() { return (T) new MemoryJwtTokenService(tokenProvider()); }
-
-    @Bean
-    public CustomAuthenticationFailureHandler customAuthenticationFailureHandler() {
-        return new JwtAuthenticationFailureHandler();
+    public <T extends UserService> T userService() {
+        return (T) new MemoryUserService(userRepository(), passwordEncoder());
     }
 
     @Bean
-    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-        return new JwtMemoryAuthenticationSuccessHandler(tokenService());
+    @SuppressWarnings("unchecked")
+    public <T extends PasswordEncoder> T passwordEncoder() {
+        return (T) new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    @SuppressWarnings("unchecked")
+    public <T extends PrincipalUserDetailsService> T principalUserDetailsService() {
+        return (T) new JwtMemoryUserDetailsService(userRepository());
+    }
+
+    @Bean
+    @SuppressWarnings("unchecked")
+    public <T extends TokenCreator> T tokenCreator() {
+        return (T) new MemoryJwtTokenCreator();
+    }
+
+    @Bean
+    @SuppressWarnings("unchecked")
+    public <T extends TokenProvider> T tokenProvider() {
+        return (T) new MemoryJwtTokenProvider(tokenCreator());
+    }
+
+    @Bean
+    @SuppressWarnings("unchecked")
+    public <T extends TokenService> T tokenService() {
+        return (T) new MemoryJwtTokenService(tokenProvider());
+    }
+
+    @Bean
+    @SuppressWarnings("unchecked")
+    public <T extends CustomAuthenticationFailureHandler> T customAuthenticationFailureHandler() {
+        return (T) new JwtAuthenticationFailureHandler();
+    }
+
+    @Bean
+    @SuppressWarnings("unchecked")
+    public <T extends CustomAuthenticationSuccessHandler> T customAuthenticationSuccessHandler() {
+        return (T) new JwtMemoryAuthenticationSuccessHandler(tokenService());
     }
 }
