@@ -1,17 +1,41 @@
 package io.github.cokelee777.springsecurityjwtauth.security.config;
 
+import io.github.cokelee777.springsecurityjwtauth.security.filter.JwtAuthenticationFilter;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.CustomAuthenticationFailureHandler;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.success.CustomAuthenticationSuccessHandler;
+import io.github.cokelee777.springsecurityjwtauth.security.provider.JwtAuthenticationProvider;
+import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
 public class JwtSecurityConfiguration {
 
     private static final String[] PUBLIC_END_POINT = {"/", "/sign-in", "/sign-up", "/error"};
+
+    private final PrincipalUserDetailsService principalUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
+    public JwtSecurityConfiguration(PrincipalUserDetailsService principalUserDetailsService,
+                                    PasswordEncoder passwordEncoder,
+                                    CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler,
+                                    CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
+        this.principalUserDetailsService = principalUserDetailsService;
+        this.passwordEncoder = passwordEncoder;
+        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+        this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -29,6 +53,23 @@ public class JwtSecurityConfiguration {
             .requestMatchers(PUBLIC_END_POINT).permitAll()
             .anyRequest().authenticated();
 
+        // JWT DSL 추가
+        http.apply(new JwtCustomDsl());
+
         return http.build();
+    }
+
+    // 공유객체에서 AuthenticationManager를 가져와 사용하기 위해 CustomDSL 정의
+    public class JwtCustomDsl extends AbstractHttpConfigurer<JwtCustomDsl, HttpSecurity> {
+
+        @Override
+        public void configure(HttpSecurity http) {
+            AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager);
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
+            http.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
+                    .authenticationProvider(new JwtAuthenticationProvider(principalUserDetailsService, passwordEncoder));
+        }
     }
 }

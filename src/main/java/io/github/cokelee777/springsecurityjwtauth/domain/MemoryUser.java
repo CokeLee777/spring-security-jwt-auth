@@ -34,6 +34,18 @@ public class MemoryUser implements User {
         return identifier;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
     private String createUUID(){
         return UUID.randomUUID().toString();
     }

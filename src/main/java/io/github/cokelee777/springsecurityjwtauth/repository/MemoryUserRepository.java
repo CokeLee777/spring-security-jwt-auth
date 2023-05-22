@@ -1,13 +1,10 @@
 package io.github.cokelee777.springsecurityjwtauth.repository;
 
 import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Repository;
 
 import java.util.Map;
+import java.util.Optional;
 
-@Primary
-@Repository
 public class MemoryUserRepository implements UserRepository<MemoryUser> {
 
     private final Map<String, MemoryUser> memoryStore;
@@ -25,5 +22,12 @@ public class MemoryUserRepository implements UserRepository<MemoryUser> {
     public boolean existsByIdentifier(String identifier) {
         return memoryStore.values().stream()
                 .anyMatch(user -> user.getIdentifier().equals(identifier));
+    }
+
+    @Override
+    public Optional<MemoryUser> findByIdentifier(String identifier) {
+        return memoryStore.values().stream()
+                .filter(user -> user.getIdentifier().equals(identifier))
+                .findFirst();
     }
 }
