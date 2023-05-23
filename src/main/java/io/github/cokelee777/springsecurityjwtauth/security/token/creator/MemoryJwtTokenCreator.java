@@ -34,7 +34,6 @@ public class MemoryJwtTokenCreator implements JwtTokenCreator<JwtMemoryUserDetai
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRED_TIME))
                 .signWith(REFRESH_KEY)
-                .setId(String.valueOf(UUID.randomUUID()))
                 .compact();
     }
 
