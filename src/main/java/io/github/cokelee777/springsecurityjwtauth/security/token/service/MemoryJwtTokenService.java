@@ -6,13 +6,16 @@ import io.github.cokelee777.springsecurityjwtauth.security.token.domain.RefreshT
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtAccessToken;
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtRefreshToken;
 import io.github.cokelee777.springsecurityjwtauth.security.token.provider.MemoryJwtTokenProvider;
+import io.github.cokelee777.springsecurityjwtauth.security.token.decoder.MemoryJwtTokenDecoder;
 
 public class MemoryJwtTokenService implements JwtTokenService<JwtMemoryUserDetails> {
 
     private final MemoryJwtTokenProvider memoryJwtTokenProvider;
+    private final MemoryJwtTokenDecoder memoryJwtTokenDecoder;
 
-    public MemoryJwtTokenService(MemoryJwtTokenProvider memoryJwtTokenProvider) {
+    public MemoryJwtTokenService(MemoryJwtTokenProvider memoryJwtTokenProvider, MemoryJwtTokenDecoder memoryJwtTokenDecoder) {
         this.memoryJwtTokenProvider = memoryJwtTokenProvider;
+        this.memoryJwtTokenDecoder = memoryJwtTokenDecoder;
     }
 
     @SuppressWarnings("unchecked")
@@ -27,5 +30,15 @@ public class MemoryJwtTokenService implements JwtTokenService<JwtMemoryUserDetai
     public <U extends RefreshToken> U issueRefreshToken(JwtMemoryUserDetails jwtUserDetails) {
         JwtRefreshToken refreshToken = memoryJwtTokenProvider.getRefreshToken(jwtUserDetails);
         return (U) refreshToken;
+    }
+
+    @Override
+    public JwtMemoryUserDetails decodeAccessToken(String accessToken) {
+        return memoryJwtTokenDecoder.decodeAccessToken(accessToken);
+    }
+
+    @Override
+    public JwtMemoryUserDetails decodeRefreshToken(String refreshToken) {
+        return memoryJwtTokenDecoder.decodeRefreshToken(refreshToken);
     }
 }

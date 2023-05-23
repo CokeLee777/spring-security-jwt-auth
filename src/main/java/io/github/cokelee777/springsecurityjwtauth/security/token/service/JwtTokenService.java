@@ -9,4 +9,8 @@ public interface JwtTokenService<T extends JwtUserDetails> extends TokenService 
     <S extends AccessToken> S issueAccessToken(T jwtUserDetails);
 
     <U extends RefreshToken> U issueRefreshToken(T jwtUserDetails);
+
+    T decodeAccessToken(String accessToken);
+
+    T decodeRefreshToken(String refreshToken);
 }
