@@ -9,10 +9,12 @@ import io.github.cokelee777.springsecurityjwtauth.security.handler.success.Custo
 import io.github.cokelee777.springsecurityjwtauth.security.handler.success.JwtMemoryAuthenticationSuccessHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.service.JwtMemoryUserDetailsService;
 import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
+import io.github.cokelee777.springsecurityjwtauth.security.token.extractor.MemoryJwtTokenExtractor;
 import io.github.cokelee777.springsecurityjwtauth.security.token.creator.MemoryJwtTokenCreator;
 import io.github.cokelee777.springsecurityjwtauth.security.token.creator.TokenCreator;
 import io.github.cokelee777.springsecurityjwtauth.security.token.decoder.MemoryJwtTokenDecoder;
 import io.github.cokelee777.springsecurityjwtauth.security.token.decoder.TokenDecoder;
+import io.github.cokelee777.springsecurityjwtauth.security.token.extractor.TokenExtractor;
 import io.github.cokelee777.springsecurityjwtauth.security.token.provider.MemoryJwtTokenProvider;
 import io.github.cokelee777.springsecurityjwtauth.security.token.provider.TokenProvider;
 import io.github.cokelee777.springsecurityjwtauth.security.token.service.MemoryJwtTokenService;
@@ -75,7 +77,7 @@ public class MainConfiguration {
     @Bean
     @SuppressWarnings("unchecked")
     public <T extends TokenService> T tokenService() {
-        return (T) new MemoryJwtTokenService(tokenProvider(), tokenDecoder());
+        return (T) new MemoryJwtTokenService(tokenProvider(), tokenExtractor());
     }
 
     @Bean
@@ -92,6 +94,11 @@ public class MainConfiguration {
 
     @Bean
     public <T extends TokenDecoder> T tokenDecoder() {
-        return (T) new MemoryJwtTokenDecoder(userService());
+        return (T) new MemoryJwtTokenDecoder();
+    }
+
+    @Bean
+    public <T extends TokenExtractor> T tokenExtractor() {
+        return (T) new MemoryJwtTokenExtractor(userService(), tokenDecoder());
     }
 }

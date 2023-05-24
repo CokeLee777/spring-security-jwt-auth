@@ -1,21 +1,22 @@
 package io.github.cokelee777.springsecurityjwtauth.security.token.service;
 
 import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtMemoryUserDetails;
+import io.github.cokelee777.springsecurityjwtauth.security.token.extractor.MemoryJwtTokenExtractor;
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.AccessToken;
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.RefreshToken;
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtAccessToken;
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.jwt.JwtRefreshToken;
 import io.github.cokelee777.springsecurityjwtauth.security.token.provider.MemoryJwtTokenProvider;
-import io.github.cokelee777.springsecurityjwtauth.security.token.decoder.MemoryJwtTokenDecoder;
 
 public class MemoryJwtTokenService implements JwtTokenService<JwtMemoryUserDetails> {
 
     private final MemoryJwtTokenProvider memoryJwtTokenProvider;
-    private final MemoryJwtTokenDecoder memoryJwtTokenDecoder;
+    private final MemoryJwtTokenExtractor memoryJwtTokenExtractor;
 
-    public MemoryJwtTokenService(MemoryJwtTokenProvider memoryJwtTokenProvider, MemoryJwtTokenDecoder memoryJwtTokenDecoder) {
+    public MemoryJwtTokenService(MemoryJwtTokenProvider memoryJwtTokenProvider,
+                                 MemoryJwtTokenExtractor memoryJwtTokenExtractor) {
         this.memoryJwtTokenProvider = memoryJwtTokenProvider;
-        this.memoryJwtTokenDecoder = memoryJwtTokenDecoder;
+        this.memoryJwtTokenExtractor = memoryJwtTokenExtractor;
     }
 
     @SuppressWarnings("unchecked")
@@ -34,11 +35,13 @@ public class MemoryJwtTokenService implements JwtTokenService<JwtMemoryUserDetai
 
     @Override
     public JwtMemoryUserDetails decodeAccessToken(String accessToken) {
-        return memoryJwtTokenDecoder.decodeAccessToken(accessToken);
+        JwtMemoryUserDetails jwtMemoryUserDetails = memoryJwtTokenExtractor.extractAccessToken(accessToken);
+        return jwtMemoryUserDetails;
     }
 
     @Override
     public JwtMemoryUserDetails decodeRefreshToken(String refreshToken) {
-        return memoryJwtTokenDecoder.decodeRefreshToken(refreshToken);
+        JwtMemoryUserDetails jwtMemoryUserDetails = memoryJwtTokenExtractor.extractRefreshToken(refreshToken);
+        return jwtMemoryUserDetails;
     }
 }

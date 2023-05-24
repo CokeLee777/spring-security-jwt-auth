@@ -1,10 +1,10 @@
 package io.github.cokelee777.springsecurityjwtauth.security.token.decoder;
 
-import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtUserDetails;
+import io.jsonwebtoken.Claims;
 
-public interface JwtTokenDecoder<T extends JwtUserDetails> extends TokenDecoder {
+public interface JwtTokenDecoder extends TokenDecoder {
 
-    T decodeAccessToken(String accessToken);
+    Claims decodeAccessToken(String accessToken);
 
-    T decodeRefreshToken(String refreshToken);
+    Claims decodeRefreshToken(String refreshToken);
 }
