@@ -1,6 +1,5 @@
 package io.github.cokelee777.springsecurityjwtauth.security.token.decoder;
 
-import io.github.cokelee777.springsecurityjwtauth.exception.CustomExpiredJwtException;
 import io.github.cokelee777.springsecurityjwtauth.security.token.common.TokenProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
@@ -23,14 +22,14 @@ public class MemoryJwtTokenDecoder implements JwtTokenDecoder {
             // Token prefix 와 실제 토큰 값을 분리
             String rawAccessToken = accessToken.split(ACCESS_TOKEN_PREFIX)[1];
             body = jwtAccessTokenParser.parseClaimsJws(rawAccessToken).getBody();
-        } catch (UnsupportedJwtException | NullPointerException e) {
+        } catch (UnsupportedJwtException | ArrayIndexOutOfBoundsException e) {
             throw new UnsupportedJwtException("지원하지 않는 토큰입니다.");
         } catch (MalformedJwtException e) {
             throw new MalformedJwtException("조작된 토큰입니다.");
         } catch (SignatureException e) {
-            throw new MalformedJwtException("토큰 서명 확인에 실패 하였습니다.");
+            throw new SignatureException("토큰 서명 확인에 실패 하였습니다.");
         } catch (ExpiredJwtException e) {
-            throw new CustomExpiredJwtException("만료된 토큰입니다.");
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "만료된 토큰입니다.");
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("토큰의 값이 존재하지 않습니다.");
         }
@@ -47,9 +46,9 @@ public class MemoryJwtTokenDecoder implements JwtTokenDecoder {
         } catch (MalformedJwtException e) {
             throw new MalformedJwtException("조작된 토큰입니다.");
         } catch (SignatureException e) {
-            throw new MalformedJwtException("토큰 서명 확인에 실패 하였습니다.");
+            throw new SignatureException("토큰 서명 확인에 실패 하였습니다.");
         } catch (ExpiredJwtException e) {
-            throw new CustomExpiredJwtException("만료된 토큰입니다.");
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "만료된 토큰입니다.");
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("토큰의 값이 존재하지 않습니다.");
         }

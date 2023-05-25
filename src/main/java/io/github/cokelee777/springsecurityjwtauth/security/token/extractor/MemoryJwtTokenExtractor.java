@@ -32,7 +32,7 @@ public class MemoryJwtTokenExtractor implements JwtTokenExtractor<JwtMemoryUserD
     }
 
     private JwtMemoryUserDetails toJwtMemoryUserDetails(Claims claims) {
-        MemoryUser memoryUser = memoryUserService.findByIdentifier((String) claims.get("identifier"));
+        MemoryUser memoryUser = memoryUserService.findByIdentifier(claims.get("identifier", String.class));
 
         verify(claims, memoryUser);
 
@@ -41,9 +41,9 @@ public class MemoryJwtTokenExtractor implements JwtTokenExtractor<JwtMemoryUserD
     }
 
     private void verify(Claims claims, MemoryUser user) {
-        if (user.getId() != claims.getId()
-                || user.getNickname() != claims.get("nickname")
-                || user.getRole().toString() != claims.get("role")) {
+        if (!user.getId().equals(claims.getSubject())
+                || !user.getNickname().equals(claims.get("nickname", String.class))
+                || !user.getRole().toString().equals(claims.get("role", String.class))) {
             throw new MalformedJwtException("변조된 토큰입니다.");
         }
     }
