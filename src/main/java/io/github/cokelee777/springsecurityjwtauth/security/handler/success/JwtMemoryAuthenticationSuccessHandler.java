@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -24,7 +23,7 @@ import static io.github.cokelee777.springsecurityjwtauth.security.token.common.T
 public class JwtMemoryAuthenticationSuccessHandler implements JwtAuthenticationSuccessHandler {
 
     private final MemoryJwtTokenService memoryJwtTokenService;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public JwtMemoryAuthenticationSuccessHandler(MemoryJwtTokenService memoryJwtTokenService) {
         this.memoryJwtTokenService = memoryJwtTokenService;
@@ -59,8 +58,8 @@ public class JwtMemoryAuthenticationSuccessHandler implements JwtAuthenticationS
 
     @Override
     public void setCookieWithJwtRefreshToken(HttpServletResponse response,
-                                             JwtRefreshToken refreshToken) throws UnsupportedEncodingException {
-        String encodedValue = URLEncoder.encode(refreshToken.getValue(), "UTF-8") ;
+                                             JwtRefreshToken refreshToken) {
+        String encodedValue = URLEncoder.encode(refreshToken.getValue(), StandardCharsets.UTF_8) ;
         Cookie cookie = new Cookie("Authorization", encodedValue);
         cookie.setMaxAge(COOKIE_EXPIRED_SECOND);
         cookie.setHttpOnly(true);
