@@ -3,6 +3,7 @@ package io.github.cokelee777.springsecurityjwtauth.service;
 import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.dto.SignUpRequestDto;
 import io.github.cokelee777.springsecurityjwtauth.exception.DuplicateIdentifierException;
+import io.github.cokelee777.springsecurityjwtauth.exception.UserNotFoundException;
 import io.github.cokelee777.springsecurityjwtauth.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -29,6 +30,11 @@ public class MemoryUserService implements UserService {
                 signUpRequestDto.nickname()
         );
         userRepository.save(memoryUser);
+    }
+
+    public MemoryUser findByIdentifier(String identifier) {
+        return userRepository.findByIdentifier(identifier)
+                .orElseThrow(() -> new UserNotFoundException("유저 정보를 찾을 수 없습니다."));
     }
 
     private String getBcryptPassword(String originalPassword) {
