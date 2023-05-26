@@ -1,10 +1,14 @@
 package io.github.cokelee777.springsecurityjwtauth.security.config;
 
 import io.github.cokelee777.springsecurityjwtauth.security.filter.JwtAuthenticationFilter;
+import io.github.cokelee777.springsecurityjwtauth.security.filter.JwtAuthorizationExceptionFilter;
+import io.github.cokelee777.springsecurityjwtauth.security.filter.JwtMemoryAuthorizationFilter;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.CustomAccessDeniedHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.CustomAuthenticationFailureHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.handler.success.CustomAuthenticationSuccessHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.provider.JwtAuthenticationProvider;
 import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
+import io.github.cokelee777.springsecurityjwtauth.security.token.service.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,21 +24,27 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @EnableWebSecurity
 public class JwtSecurityConfiguration {
 
-    private static final String[] PUBLIC_END_POINT = {"/", "/sign-in", "/sign-up", "/error"};
+    private static final String[] PUBLIC_END_POINT = {"/", "/users/sign-in", "/users/sign-up"};
 
     private final PrincipalUserDetailsService principalUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final TokenService tokenService;
 
     public JwtSecurityConfiguration(PrincipalUserDetailsService principalUserDetailsService,
                                     PasswordEncoder passwordEncoder,
                                     CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler,
-                                    CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
+                                    CustomAuthenticationFailureHandler customAuthenticationFailureHandler,
+                                    CustomAccessDeniedHandler customAccessDeniedHandler,
+                                    TokenService tokenService) {
         this.principalUserDetailsService = principalUserDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
         this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.tokenService = tokenService;
     }
 
     @Bean
@@ -51,7 +61,16 @@ public class JwtSecurityConfiguration {
         // 인가 API
         http.authorizeHttpRequests()
             .requestMatchers(PUBLIC_END_POINT).permitAll()
+            .requestMatchers("/users/**")
+                .hasAnyRole("USER", "MANAGER", "ADMIN")
+            .requestMatchers("/manager/**")
+                .hasAnyRole("MANAGER", "ADMIN")
+            .requestMatchers("/admin/**")
+                .hasAnyRole("ADMIN")
             .anyRequest().authenticated();
+
+        http.exceptionHandling()
+                .accessDeniedHandler(customAccessDeniedHandler);
 
         // JWT DSL 추가
         http.apply(new JwtCustomDsl());
@@ -70,6 +89,12 @@ public class JwtSecurityConfiguration {
             jwtAuthenticationFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
             http.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
                     .authenticationProvider(new JwtAuthenticationProvider(principalUserDetailsService, passwordEncoder));
+
+            JwtMemoryAuthorizationFilter jwtMemoryAuthorizationFilter =
+                    new JwtMemoryAuthorizationFilter(authenticationManager, tokenService);
+            JwtAuthorizationExceptionFilter jwtAuthorizationExceptionFilter = new JwtAuthorizationExceptionFilter();
+            http.addFilterBefore(jwtMemoryAuthorizationFilter, JwtAuthenticationFilter.class);
+            http.addFilterBefore(jwtAuthorizationExceptionFilter, JwtMemoryAuthorizationFilter.class);
         }
     }
 }

@@ -2,6 +2,7 @@ package io.github.cokelee777.springsecurityjwtauth.utils;
 
 public interface DefaultHttpMessage {
     String OK = "요청에 성공하였습니다.";
+    String MOVED_PERMANENTLY = "영구적인 리다이렉션이 필요합니다. redirect=%s;";
     String UNAUTHORIZED = "인증이 필요한 요청입니다.";
     String BAD_REQUEST = "잘못된 요청입니다.";
     String FORBIDDEN = "승인이 필요한 페이지 요청입니다.";
