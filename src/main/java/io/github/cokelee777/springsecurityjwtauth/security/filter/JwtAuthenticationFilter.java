@@ -20,7 +20,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER =
-            new AntPathRequestMatcher("/sign-in", HttpMethod.POST.name());
+            new AntPathRequestMatcher("/users/sign-in", HttpMethod.POST.name());
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
