@@ -5,7 +5,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 import java.util.Date;
-import java.util.UUID;
 
 import static io.github.cokelee777.springsecurityjwtauth.security.token.common.TokenProperties.*;
 
@@ -16,7 +15,6 @@ public class MemoryJwtTokenCreator implements JwtTokenCreator<JwtMemoryUserDetai
         Date now = new Date();
         Claims claims = setClaims(jwtMemoryUserDetails);
         return ACCESS_TOKEN_PREFIX + Jwts.builder()
-                .setSubject(jwtMemoryUserDetails.getId())
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRED_TIME))
@@ -29,7 +27,6 @@ public class MemoryJwtTokenCreator implements JwtTokenCreator<JwtMemoryUserDetai
         Date now = new Date();
         Claims claims = setClaims(jwtMemoryUserDetails);
         return Jwts.builder()
-                .setSubject(jwtMemoryUserDetails.getId())
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRED_TIME))
@@ -42,6 +39,7 @@ public class MemoryJwtTokenCreator implements JwtTokenCreator<JwtMemoryUserDetai
         claims.put("identifier", jwtMemoryUserDetails.getUsername());
         claims.put("nickname", jwtMemoryUserDetails.getNickname());
         claims.put("role", jwtMemoryUserDetails.getRole().toString());
+        claims.setSubject(jwtMemoryUserDetails.getId());
         return claims;
     }
 }
