@@ -60,7 +60,7 @@ public class JwtSecurityConfiguration {
 
         // 인가 API
         http.authorizeHttpRequests()
-            .requestMatchers(PUBLIC_END_POINT).permitAll()
+            .requestMatchers(PUBLIC_END_POINT).anonymous()
             .requestMatchers("/users/**")
                 .hasAnyRole("USER", "MANAGER", "ADMIN")
             .requestMatchers("/manager/**")

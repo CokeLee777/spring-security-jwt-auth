@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Arrays;
 
 public class JwtMemoryAuthorizationFilter extends BasicAuthenticationFilter implements JwtAuthorizationFilter {
@@ -69,15 +70,20 @@ public class JwtMemoryAuthorizationFilter extends BasicAuthenticationFilter impl
                 if(!cookie.getName().equals(AUTHORIZATION_COOKIE_NAME)) {
                     continue;
                 }
-                // TODO: 쿠키가 HttpOnly 속성을 가지고 있는지 검증
-//                if(!cookie.isHttpOnly()) {
-//                    throw new AuthenticationException("변조된 쿠키입니다");
-//                }
+                // 쿠키가 HttpOnly 속성을 가지고 있는지 검증
+                if(!cookie.isHttpOnly()) {
+                    throw new AuthenticationException("변조된 쿠키입니다");
+                }
                 // 쿠키가 만료되지 않았는지 검증
-                int expirationTime = cookie.getMaxAge();
-                int currentTime = (int) (System.currentTimeMillis() / 1000);
+                int maxAge = cookie.getMaxAge();
+                // 만료일이 세팅이 안되어있다면
+                if(maxAge == -1) {
+                    throw new AuthenticationException("변조된 쿠키입니다");
+                }
+                long expirationTimeMillis = Instant.now().plusSeconds(maxAge).toEpochMilli();
+                long currentTimeMillis = System.currentTimeMillis();
                 // 쿠키가 만료되었다면
-                if(expirationTime != -1 && expirationTime < currentTime) {
+                if(currentTimeMillis >= expirationTimeMillis) {
                     throw new AuthenticationException("쿠키가 만료되었습니다");
                 }
                 // 쿠키 값으로 Refresh token 검증
