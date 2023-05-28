@@ -8,6 +8,7 @@ import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.Custo
 import io.github.cokelee777.springsecurityjwtauth.security.handler.success.CustomAuthenticationSuccessHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.provider.JwtAuthenticationProvider;
 import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
+import io.github.cokelee777.springsecurityjwtauth.security.token.service.MemoryJwtTokenService;
 import io.github.cokelee777.springsecurityjwtauth.security.token.service.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -91,7 +92,7 @@ public class JwtSecurityConfiguration {
                     .authenticationProvider(new JwtAuthenticationProvider(principalUserDetailsService, passwordEncoder));
 
             JwtMemoryAuthorizationFilter jwtMemoryAuthorizationFilter =
-                    new JwtMemoryAuthorizationFilter(authenticationManager, tokenService);
+                    new JwtMemoryAuthorizationFilter(authenticationManager, (MemoryJwtTokenService) tokenService);
             JwtAuthorizationExceptionFilter jwtAuthorizationExceptionFilter = new JwtAuthorizationExceptionFilter();
             http.addFilterBefore(jwtMemoryAuthorizationFilter, JwtAuthenticationFilter.class);
             http.addFilterBefore(jwtAuthorizationExceptionFilter, JwtMemoryAuthorizationFilter.class);

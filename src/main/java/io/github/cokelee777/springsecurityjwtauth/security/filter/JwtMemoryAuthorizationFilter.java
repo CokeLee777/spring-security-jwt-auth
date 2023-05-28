@@ -4,7 +4,6 @@ import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtAuthenticatio
 import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtMemoryUserDetails;
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.AccessToken;
 import io.github.cokelee777.springsecurityjwtauth.security.token.service.MemoryJwtTokenService;
-import io.github.cokelee777.springsecurityjwtauth.security.token.service.TokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,24 +14,21 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
 
-public class JwtMemoryAuthorizationFilter extends BasicAuthenticationFilter implements JwtAuthorizationFilter {
+public class JwtMemoryAuthorizationFilter extends JwtAuthorizationFilter<MemoryJwtTokenService> {
 
     private static final String[] PUBLIC_END_POINT = {"/", "/users/sign-in", "/users/sign-up"};
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_COOKIE_NAME = "Authorization";
 
-    private final MemoryJwtTokenService tokenService;
-
-    public JwtMemoryAuthorizationFilter(AuthenticationManager authenticationManager, TokenService tokenService) {
-        super(authenticationManager);
-        this.tokenService = (MemoryJwtTokenService) tokenService;
+    public JwtMemoryAuthorizationFilter(
+            AuthenticationManager authenticationManager, MemoryJwtTokenService tokenService) {
+        super(authenticationManager, tokenService);
     }
 
     @Override
