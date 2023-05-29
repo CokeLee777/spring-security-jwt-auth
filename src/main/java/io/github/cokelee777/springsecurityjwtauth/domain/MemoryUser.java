@@ -11,7 +11,7 @@ public class MemoryUser implements User {
     private final String identifier;
     private final String password;
     private final String nickname;
-    private UserRole role = UserRole.USER;
+    private UserRole role = UserRole.ROLE_USER;
 
     public MemoryUser(String identifier, String password, String nickname) {
         this.identifier = identifier;

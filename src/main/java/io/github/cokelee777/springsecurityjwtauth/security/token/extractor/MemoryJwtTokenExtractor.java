@@ -20,15 +20,13 @@ public class MemoryJwtTokenExtractor implements JwtTokenExtractor<JwtMemoryUserD
     @Override
     public JwtMemoryUserDetails extractAccessToken(String accessToken) {
         Claims claims = memoryJwtTokenDecoder.decodeAccessToken(accessToken);
-        JwtMemoryUserDetails jwtMemoryUserDetails = toJwtMemoryUserDetails(claims);
-        return jwtMemoryUserDetails;
+        return toJwtMemoryUserDetails(claims);
     }
 
     @Override
     public JwtMemoryUserDetails extractRefreshToken(String refreshToken) {
         Claims claims = memoryJwtTokenDecoder.decodeRefreshToken(refreshToken);
-        JwtMemoryUserDetails jwtMemoryUserDetails = toJwtMemoryUserDetails(claims);
-        return jwtMemoryUserDetails;
+        return toJwtMemoryUserDetails(claims);
     }
 
     private JwtMemoryUserDetails toJwtMemoryUserDetails(Claims claims) {
@@ -36,13 +34,11 @@ public class MemoryJwtTokenExtractor implements JwtTokenExtractor<JwtMemoryUserD
 
         verify(claims, memoryUser);
 
-        JwtMemoryUserDetails jwtMemoryUserDetails = new JwtMemoryUserDetails(memoryUser);
-        return jwtMemoryUserDetails;
+        return new JwtMemoryUserDetails(memoryUser);
     }
 
     private void verify(Claims claims, MemoryUser user) {
         if (!user.getId().equals(claims.getSubject())
-                || !user.getNickname().equals(claims.get("nickname", String.class))
                 || !user.getRole().toString().equals(claims.get("role", String.class))) {
             throw new MalformedJwtException("변조된 토큰입니다.");
         }

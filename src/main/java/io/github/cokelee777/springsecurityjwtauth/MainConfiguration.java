@@ -3,17 +3,18 @@ package io.github.cokelee777.springsecurityjwtauth;
 import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.repository.MemoryUserRepository;
 import io.github.cokelee777.springsecurityjwtauth.repository.UserRepository;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.CustomAccessDeniedHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.CustomAuthenticationFailureHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.JwtAuthenticationFailureHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.handler.success.CustomAuthenticationSuccessHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.handler.success.JwtMemoryAuthenticationSuccessHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.service.JwtMemoryUserDetailsService;
 import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
-import io.github.cokelee777.springsecurityjwtauth.security.token.extractor.MemoryJwtTokenExtractor;
 import io.github.cokelee777.springsecurityjwtauth.security.token.creator.MemoryJwtTokenCreator;
 import io.github.cokelee777.springsecurityjwtauth.security.token.creator.TokenCreator;
 import io.github.cokelee777.springsecurityjwtauth.security.token.decoder.MemoryJwtTokenDecoder;
 import io.github.cokelee777.springsecurityjwtauth.security.token.decoder.TokenDecoder;
+import io.github.cokelee777.springsecurityjwtauth.security.token.extractor.MemoryJwtTokenExtractor;
 import io.github.cokelee777.springsecurityjwtauth.security.token.extractor.TokenExtractor;
 import io.github.cokelee777.springsecurityjwtauth.security.token.provider.MemoryJwtTokenProvider;
 import io.github.cokelee777.springsecurityjwtauth.security.token.provider.TokenProvider;
@@ -93,11 +94,18 @@ public class MainConfiguration {
     }
 
     @Bean
+    public CustomAccessDeniedHandler customAccessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
+
+    @Bean
+    @SuppressWarnings("unchecked")
     public <T extends TokenDecoder> T tokenDecoder() {
         return (T) new MemoryJwtTokenDecoder();
     }
 
     @Bean
+    @SuppressWarnings("unchecked")
     public <T extends TokenExtractor> T tokenExtractor() {
         return (T) new MemoryJwtTokenExtractor(userService(), tokenDecoder());
     }
