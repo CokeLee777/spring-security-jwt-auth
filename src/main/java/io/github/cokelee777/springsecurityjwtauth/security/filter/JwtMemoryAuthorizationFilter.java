@@ -57,15 +57,20 @@ public class JwtMemoryAuthorizationFilter extends JwtAuthorizationFilter<MemoryJ
         } catch(ExpiredJwtException e1) {
             // 토큰이 만료되었다면 쿠키 검증
             Cookie[] cookies = request.getCookies();
-            // 쿠키가 존재하지 않는다면
+
+            // 쿠키가 비어있다면
             if(cookies == null) {
                 throw new IllegalArgumentException("쿠키가 존재하지 않습니다");
             }
+
+            boolean hasAuthorizationCookie = false;
             for (Cookie cookie : cookies) {
                 // 인증 쿠키인지 검증
                 if(!cookie.getName().equals(AUTHORIZATION_COOKIE_NAME)) {
                     continue;
                 }
+
+                hasAuthorizationCookie = true;
                 // 쿠키가 HttpOnly 속성을 가지고 있는지 검증
                 if(!cookie.isHttpOnly()) {
                     throw new AuthenticationException("변조된 쿠키입니다");
@@ -101,7 +106,10 @@ public class JwtMemoryAuthorizationFilter extends JwtAuthorizationFilter<MemoryJ
                     // 그냥 예외를 던진다
                     throw new ExpiredJwtException(e2.getHeader(), e2.getClaims(), e2.getMessage());
                 }
+            }
 
+            if(!hasAuthorizationCookie) {
+                throw new IllegalArgumentException("인증 쿠키가 존재하지 않습니다");
             }
         }
 
