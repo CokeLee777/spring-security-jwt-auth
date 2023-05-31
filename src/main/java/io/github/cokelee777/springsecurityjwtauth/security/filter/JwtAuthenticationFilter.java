@@ -2,6 +2,7 @@ package io.github.cokelee777.springsecurityjwtauth.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.cokelee777.springsecurityjwtauth.dto.SignInRequestDto;
+import io.github.cokelee777.springsecurityjwtauth.exception.DuplicatedAuthenticationException;
 import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtAuthenticationToken;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +12,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StringUtils;
@@ -31,6 +34,11 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
+        // 이미 인증된 사용자인지 검증
+        if(isAuthorized()) {
+            throw new DuplicatedAuthenticationException("이미 인증된 사용자 입니다");
+        }
+
         // 클라이언트 요청 검증
         SignInRequestDto signInRequestDto;
         try {
@@ -46,6 +54,20 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         JwtAuthenticationToken authRequest = JwtAuthenticationToken.unauthenticated(identifier, password);
 
         return this.getAuthenticationManager().authenticate(authRequest);
+    }
+
+    private boolean isAuthorized() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if(securityContext == null) {
+            return false;
+        }
+
+        Authentication authentication = securityContext.getAuthentication();
+        if(authentication == null) {
+            return false;
+        }
+
+        return authentication.getClass().equals(JwtAuthenticationToken.class);
     }
 
     @Nonnull

@@ -25,7 +25,8 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @EnableWebSecurity
 public class JwtSecurityConfiguration {
 
-    private static final String[] PUBLIC_END_POINT = {"/", "/users/sign-in", "/users/sign-up"};
+    private static final String[] PUBLIC_END_POINT = {"/"};
+    private static final String[] ANONYMOUS_END_POINT = {"/", "/users/sign-in", "/users/sign-up"};
 
     private final PrincipalUserDetailsService principalUserDetailsService;
     private final PasswordEncoder passwordEncoder;
@@ -61,7 +62,8 @@ public class JwtSecurityConfiguration {
 
         // 인가 API
         http.authorizeHttpRequests()
-            .requestMatchers(PUBLIC_END_POINT).anonymous()
+            .requestMatchers(PUBLIC_END_POINT).permitAll()
+            .requestMatchers(ANONYMOUS_END_POINT).anonymous()
             .requestMatchers("/users/**")
                 .hasAnyRole("USER", "MANAGER", "ADMIN")
             .requestMatchers("/manager/**")
