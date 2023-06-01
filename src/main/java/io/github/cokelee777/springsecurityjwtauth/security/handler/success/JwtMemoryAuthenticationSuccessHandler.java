@@ -63,6 +63,7 @@ public class JwtMemoryAuthenticationSuccessHandler implements JwtAuthenticationS
         Cookie cookie = new Cookie("Authorization", encodedValue);
         cookie.setMaxAge(COOKIE_EXPIRED_SECOND);
         cookie.setHttpOnly(true);
+        cookie.setPath("/");
         // setSecure을 true로 할 시 HTTPS 에서만 접근 가능하기 때문
 //        cookie.setSecure(true);
         response.addCookie(cookie);
