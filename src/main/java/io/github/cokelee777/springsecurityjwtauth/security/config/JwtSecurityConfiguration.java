@@ -5,6 +5,8 @@ import io.github.cokelee777.springsecurityjwtauth.security.filter.JwtAuthorizati
 import io.github.cokelee777.springsecurityjwtauth.security.filter.JwtMemoryAuthorizationFilter;
 import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.CustomAccessDeniedHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.handler.failure.CustomAuthenticationFailureHandler;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.logout.JwtLogoutHandler;
+import io.github.cokelee777.springsecurityjwtauth.security.handler.logout.JwtLogoutSuccessHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.handler.success.CustomAuthenticationSuccessHandler;
 import io.github.cokelee777.springsecurityjwtauth.security.provider.JwtAuthenticationProvider;
 import io.github.cokelee777.springsecurityjwtauth.security.service.PrincipalUserDetailsService;
@@ -25,6 +27,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @EnableWebSecurity
 public class JwtSecurityConfiguration {
 
+    private static final String LOGOUT_END_POINT = "/users/sign-out";
     private static final String[] PUBLIC_END_POINT = {"/"};
     private static final String[] ANONYMOUS_END_POINT = {"/", "/users/sign-in", "/users/sign-up"};
 
@@ -59,6 +62,12 @@ public class JwtSecurityConfiguration {
             .formLogin().disable()
             .httpBasic().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        // 로그아웃 설정
+        http.logout()
+                .logoutUrl(LOGOUT_END_POINT)
+                .addLogoutHandler(new JwtLogoutHandler())
+                .logoutSuccessHandler(new JwtLogoutSuccessHandler());
 
         // 인가 API
         http.authorizeHttpRequests()
