@@ -18,11 +18,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Arrays;
 
 public class JwtMemoryAuthorizationFilter extends JwtAuthorizationFilter<MemoryJwtTokenService> {
 
-    private static final String[] PUBLIC_END_POINT = {"/", "/users/sign-in", "/users/sign-up"};
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_COOKIE_NAME = "Authorization";
 
@@ -34,16 +32,12 @@ public class JwtMemoryAuthorizationFilter extends JwtAuthorizationFilter<MemoryJ
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        // white label list 확인
-        if(Arrays.stream(PUBLIC_END_POINT).anyMatch(path -> path.equals(request.getRequestURI()))) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         // Header 검증
         String accessToken = request.getHeader(AUTHORIZATION_HEADER);
         if(accessToken == null) {
-            throw new IllegalArgumentException("인증 헤더가 필요한 요청입니다");
+            // 액세스 토큰이 없다면 다음 필터에서 익명 사용자로 처리
+            filterChain.doFilter(request, response);
+            return;
         }
 
         JwtMemoryUserDetails jwtMemoryUserDetails;
