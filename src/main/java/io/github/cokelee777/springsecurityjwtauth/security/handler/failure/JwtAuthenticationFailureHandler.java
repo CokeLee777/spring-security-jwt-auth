@@ -2,6 +2,7 @@ package io.github.cokelee777.springsecurityjwtauth.security.handler.failure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.cokelee777.springsecurityjwtauth.dto.common.ExceptionResponseBody;
+import io.github.cokelee777.springsecurityjwtauth.exception.DuplicatedAuthenticationException;
 import io.github.cokelee777.springsecurityjwtauth.utils.DefaultHttpMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,14 +18,15 @@ import java.nio.charset.StandardCharsets;
 
 public class JwtAuthenticationFailureHandler implements CustomAuthenticationFailureHandler {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
         String message = exception.getMessage();
-
-        if (exception instanceof AuthenticationServiceException
+        if(exception instanceof DuplicatedAuthenticationException) {
+            setErrorResponse(HttpStatus.FORBIDDEN, response, DefaultHttpMessage.FORBIDDEN, message);
+        } else if (exception instanceof AuthenticationServiceException
                 || exception instanceof BadCredentialsException
                 || exception instanceof UsernameNotFoundException) {
             setErrorResponse(HttpStatus.UNAUTHORIZED, response, DefaultHttpMessage.UNAUTHORIZED, message);
