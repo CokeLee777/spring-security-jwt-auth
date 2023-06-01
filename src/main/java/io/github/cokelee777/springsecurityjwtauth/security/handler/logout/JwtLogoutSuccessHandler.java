@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 public class JwtLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final static String LOGOUT_SUCCESS_MESSAGE = "로그아웃 성공, ";
+    private final static String LOGOUT_REDIRECT_END_POINT = "/users/sign-in";
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -24,9 +24,10 @@ public class JwtLogoutSuccessHandler implements LogoutSuccessHandler {
         response.setStatus(HttpStatus.MOVED_PERMANENTLY.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
+
         objectMapper.writeValue(response.getWriter(), new SuccessResponseBody<>(
                 HttpStatus.MOVED_PERMANENTLY.getReasonPhrase(),
-                LOGOUT_SUCCESS_MESSAGE + String.format(DefaultHttpMessage.MOVED_PERMANENTLY, "/users/sign-in"),
+                String.format(DefaultHttpMessage.MOVED_PERMANENTLY, LOGOUT_REDIRECT_END_POINT),
                 null));
     }
 }

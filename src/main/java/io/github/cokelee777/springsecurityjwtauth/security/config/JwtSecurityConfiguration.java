@@ -28,6 +28,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 public class JwtSecurityConfiguration {
 
     private static final String[] PUBLIC_END_POINT = {"/", "/users/sign-in", "/users/sign-up"};
+    private static final String LOGOUT_END_POINT = "/users/sign-out";
 
     private final PrincipalUserDetailsService principalUserDetailsService;
     private final PasswordEncoder passwordEncoder;
@@ -63,7 +64,7 @@ public class JwtSecurityConfiguration {
 
         // 로그아웃 설정
         http.logout()
-                .logoutUrl("/users/logout")
+                .logoutUrl(LOGOUT_END_POINT)
                 .addLogoutHandler(new JwtLogoutHandler())
                 .logoutSuccessHandler(new JwtLogoutSuccessHandler());
 
