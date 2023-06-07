@@ -74,7 +74,7 @@ class UserControllerTest {
                 }""";
 
         // when, then
-        postRequestMockServer("/sign-up", HttpStatus.OK, DefaultHttpMessage.OK, requestBody);
+        postRequestMockServer("/users/sign-up", HttpStatus.OK, DefaultHttpMessage.OK, requestBody);
     }
 
     @Test
@@ -87,7 +87,7 @@ class UserControllerTest {
                 }""";
 
         // when, then
-        postRequestMockServer("/sign-up", HttpStatus.BAD_REQUEST, DefaultHttpMessage.BAD_REQUEST, requestBody);
+        postRequestMockServer("/users/sign-up", HttpStatus.BAD_REQUEST, DefaultHttpMessage.BAD_REQUEST, requestBody);
     }
 
     @Test
@@ -99,7 +99,7 @@ class UserControllerTest {
                     "password": }""";
 
         // when, then
-        postRequestMockServer("/sign-up", HttpStatus.BAD_REQUEST, DefaultHttpMessage.BAD_REQUEST, requestBody);
+        postRequestMockServer("/users/sign-up", HttpStatus.BAD_REQUEST, DefaultHttpMessage.BAD_REQUEST, requestBody);
     }
 
     @Test
@@ -112,6 +112,6 @@ class UserControllerTest {
                 }""", EXISTS_USER_IDENTIFIER);
 
         // when, then
-        postRequestMockServer("/sign-up", HttpStatus.CONFLICT, DefaultHttpMessage.CONFLICT, requestBody);
+        postRequestMockServer("/users/sign-up", HttpStatus.CONFLICT, DefaultHttpMessage.CONFLICT, requestBody);
     }
 }

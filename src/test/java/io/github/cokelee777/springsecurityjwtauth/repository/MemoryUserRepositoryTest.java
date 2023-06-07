@@ -1,7 +1,7 @@
 package io.github.cokelee777.springsecurityjwtauth.repository;
 
-import io.github.cokelee777.springsecurityjwtauth.common.repository.UserRepository;
 import io.github.cokelee777.springsecurityjwtauth.memory.entity.MemoryUser;
+import io.github.cokelee777.springsecurityjwtauth.memory.repository.MemoryUserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import java.util.Map;
 class MemoryUserRepositoryTest {
 
     @Autowired
-    private UserRepository<MemoryUser> memoryUserRepository;
+    private MemoryUserRepository memoryUserRepository;
 
     @Autowired
     private Map<String, MemoryUser> memoryStore;

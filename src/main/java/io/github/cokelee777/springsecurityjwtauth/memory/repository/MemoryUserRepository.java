@@ -1,7 +1,7 @@
 package io.github.cokelee777.springsecurityjwtauth.memory.repository;
 
-import io.github.cokelee777.springsecurityjwtauth.memory.entity.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.common.repository.UserRepository;
+import io.github.cokelee777.springsecurityjwtauth.memory.entity.MemoryUser;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
