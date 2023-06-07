@@ -1,6 +1,7 @@
 package io.github.cokelee777.springsecurityjwtauth.repository;
 
-import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
+import io.github.cokelee777.springsecurityjwtauth.common.repository.UserRepository;
+import io.github.cokelee777.springsecurityjwtauth.memory.entity.MemoryUser;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
