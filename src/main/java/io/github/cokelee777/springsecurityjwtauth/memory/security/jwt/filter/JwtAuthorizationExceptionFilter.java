@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
 
 public class JwtAuthorizationExceptionFilter extends OncePerRequestFilter {
 
@@ -25,6 +26,12 @@ public class JwtAuthorizationExceptionFilter extends OncePerRequestFilter {
             throws IOException {
         try {
             filterChain.doFilter(request, response);
+        } catch(AccessDeniedException e) {
+            setErrorResponse(
+                    HttpStatus.FORBIDDEN,
+                    response,
+                    DefaultHttpMessage.FORBIDDEN,
+                    e.getMessage());
         } catch(ExpiredJwtException e) {
             setErrorResponse(
                     HttpStatus.MOVED_PERMANENTLY,

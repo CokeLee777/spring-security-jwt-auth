@@ -18,13 +18,16 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.time.Instant;
+import java.util.Arrays;
 
 public class JwtMemoryAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final JwtMemoryTokenService jwtMemoryTokenService;
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_COOKIE_NAME = "Authorization";
+    private static final String[] ANONYMOUS_END_POINT = {"/", "/users/sign-in", "/users/sign-up"};
 
     public JwtMemoryAuthorizationFilter(
             AuthenticationManager authenticationManager, JwtMemoryTokenService tokenService) {
@@ -38,9 +41,13 @@ public class JwtMemoryAuthorizationFilter extends BasicAuthenticationFilter {
         // Header 검증
         String accessToken = request.getHeader(AUTHORIZATION_HEADER);
         if(accessToken == null) {
-            // 액세스 토큰이 없다면 다음 필터에서 익명 사용자로 처리
-            filterChain.doFilter(request, response);
-            return;
+            if(Arrays.stream(ANONYMOUS_END_POINT).anyMatch(path -> path.equals(request.getRequestURI()))) {
+                // 액세스 토큰이 없다면 다음 필터에서 익명 사용자로 처리
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            throw new AccessDeniedException("인증 헤더가 존재하지 않습니다");
         }
 
         JwtMemoryUserDetails jwtMemoryUserDetails;
