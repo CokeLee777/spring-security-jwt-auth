@@ -41,7 +41,7 @@ public class JwtMemoryAuthorizationFilter extends BasicAuthenticationFilter {
         // Header 검증
         String accessToken = request.getHeader(AUTHORIZATION_HEADER);
         if(accessToken == null) {
-            if(Arrays.stream(ANONYMOUS_END_POINT).anyMatch(path -> path.equals(request.getRequestURI()))) {
+            if(isAnonymousRequest(request)) {
                 // 액세스 토큰이 없다면 다음 필터에서 익명 사용자로 처리
                 filterChain.doFilter(request, response);
                 return;
@@ -118,6 +118,10 @@ public class JwtMemoryAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private static boolean isAnonymousRequest(HttpServletRequest request) {
+        return Arrays.stream(ANONYMOUS_END_POINT).anyMatch(path -> path.equals(request.getRequestURI()));
     }
 
     private static void setAuthentication(JwtMemoryUserDetails jwtMemoryUserDetails) {
