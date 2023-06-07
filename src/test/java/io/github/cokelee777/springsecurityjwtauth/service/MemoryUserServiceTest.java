@@ -1,9 +1,10 @@
 package io.github.cokelee777.springsecurityjwtauth.service;
 
-import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
-import io.github.cokelee777.springsecurityjwtauth.dto.SignUpRequestDto;
-import io.github.cokelee777.springsecurityjwtauth.exception.DuplicateIdentifierException;
-import io.github.cokelee777.springsecurityjwtauth.repository.UserRepository;
+import io.github.cokelee777.springsecurityjwtauth.common.dto.SignUpRequestDto;
+import io.github.cokelee777.springsecurityjwtauth.common.exception.DuplicateIdentifierException;
+import io.github.cokelee777.springsecurityjwtauth.memory.entity.MemoryUser;
+import io.github.cokelee777.springsecurityjwtauth.memory.repository.MemoryUserRepository;
+import io.github.cokelee777.springsecurityjwtauth.memory.service.MemoryUserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -16,10 +17,10 @@ import java.util.Map;
 class MemoryUserServiceTest {
 
     @Autowired
-    private UserService memoryUserService;
+    private MemoryUserService memoryUserService;
 
     @Autowired
-    private UserRepository<MemoryUser> memoryUserRepository;
+    private MemoryUserRepository memoryUserRepository;
 
     @Autowired
     private Map<String, MemoryUser> memoryStore;

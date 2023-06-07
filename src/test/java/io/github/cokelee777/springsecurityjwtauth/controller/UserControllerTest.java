@@ -1,9 +1,9 @@
 package io.github.cokelee777.springsecurityjwtauth.controller;
 
-import io.github.cokelee777.springsecurityjwtauth.domain.MemoryUser;
-import io.github.cokelee777.springsecurityjwtauth.dto.SignUpRequestDto;
-import io.github.cokelee777.springsecurityjwtauth.service.UserService;
-import io.github.cokelee777.springsecurityjwtauth.utils.DefaultHttpMessage;
+import io.github.cokelee777.springsecurityjwtauth.memory.entity.MemoryUser;
+import io.github.cokelee777.springsecurityjwtauth.common.dto.SignUpRequestDto;
+import io.github.cokelee777.springsecurityjwtauth.common.service.UserService;
+import io.github.cokelee777.springsecurityjwtauth.common.utils.DefaultHttpMessage;
 import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,7 +74,7 @@ class UserControllerTest {
                 }""";
 
         // when, then
-        postRequestMockServer("/sign-up", HttpStatus.OK, DefaultHttpMessage.OK, requestBody);
+        postRequestMockServer("/users/sign-up", HttpStatus.OK, DefaultHttpMessage.OK, requestBody);
     }
 
     @Test
@@ -87,7 +87,7 @@ class UserControllerTest {
                 }""";
 
         // when, then
-        postRequestMockServer("/sign-up", HttpStatus.BAD_REQUEST, DefaultHttpMessage.BAD_REQUEST, requestBody);
+        postRequestMockServer("/users/sign-up", HttpStatus.BAD_REQUEST, DefaultHttpMessage.BAD_REQUEST, requestBody);
     }
 
     @Test
@@ -99,7 +99,7 @@ class UserControllerTest {
                     "password": }""";
 
         // when, then
-        postRequestMockServer("/sign-up", HttpStatus.BAD_REQUEST, DefaultHttpMessage.BAD_REQUEST, requestBody);
+        postRequestMockServer("/users/sign-up", HttpStatus.BAD_REQUEST, DefaultHttpMessage.BAD_REQUEST, requestBody);
     }
 
     @Test
@@ -112,6 +112,6 @@ class UserControllerTest {
                 }""", EXISTS_USER_IDENTIFIER);
 
         // when, then
-        postRequestMockServer("/sign-up", HttpStatus.CONFLICT, DefaultHttpMessage.CONFLICT, requestBody);
+        postRequestMockServer("/users/sign-up", HttpStatus.CONFLICT, DefaultHttpMessage.CONFLICT, requestBody);
     }
 }
