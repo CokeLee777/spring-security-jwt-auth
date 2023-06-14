@@ -5,7 +5,7 @@ import io.github.cokelee777.springsecurityjwtauth.entity.User;
 
 public interface UserService {
 
-    void createUser(SignUpRequestDto signUpRequestDto);
+    <T extends User> T createUser(SignUpRequestDto signUpRequestDto);
 
-    User getByIdentifier(String identifier);
+    <T extends User> T getByIdentifier(String identifier);
 }

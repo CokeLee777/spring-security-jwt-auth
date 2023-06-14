@@ -1,8 +1,8 @@
 package io.github.cokelee777.springsecurityjwtauth.security.service;
 
 import io.github.cokelee777.springsecurityjwtauth.entity.User;
-import io.github.cokelee777.springsecurityjwtauth.repository.UserRepository;
 import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtUserDetails;
+import io.github.cokelee777.springsecurityjwtauth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,12 +13,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class JwtUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByIdentifier(username).orElseThrow(
-                () -> new UsernameNotFoundException("존재하지 않는 아이디 입니다"));
+        User user = userService.getByIdentifier(username);
         return new JwtUserDetails(user);
     }
 }
