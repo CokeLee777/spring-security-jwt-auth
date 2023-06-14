@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @SpringBootApplication
 @ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Memory.class))
+//@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = DataBase.class))
 public class SpringSecurityJwtAuthApplication {
 
     public static void main(String[] args) {
