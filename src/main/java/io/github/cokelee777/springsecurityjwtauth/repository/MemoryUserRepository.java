@@ -1,11 +1,15 @@
 package io.github.cokelee777.springsecurityjwtauth.repository;
 
+import io.github.cokelee777.springsecurityjwtauth.annotations.Memory;
 import io.github.cokelee777.springsecurityjwtauth.entity.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.entity.User;
+import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
+@Memory
 public class MemoryUserRepository implements UserRepository {
 
     private final Map<String, MemoryUser> memoryStore;
@@ -15,9 +19,10 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public <T extends User> void save(T user) {
+    @SuppressWarnings("unchecked")
+    public <T extends User> T save(T user) {
         MemoryUser memoryUser = (MemoryUser) user;
-        memoryStore.putIfAbsent(memoryUser.getId().toString(), memoryUser);
+        return (T) memoryStore.putIfAbsent(memoryUser.getId().toString(), memoryUser);
     }
 
     @Override

@@ -1,10 +1,14 @@
 package io.github.cokelee777.springsecurityjwtauth.repository;
 
+import io.github.cokelee777.springsecurityjwtauth.annotations.DataBase;
 import io.github.cokelee777.springsecurityjwtauth.entity.DBUser;
 import io.github.cokelee777.springsecurityjwtauth.entity.User;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
+@DataBase
 public class DBUserRepository implements UserRepository {
 
     private final JpaUserRepository jpaUserRepository;
@@ -15,8 +19,10 @@ public class DBUserRepository implements UserRepository {
 
 
     @Override
-    public <T extends User> void save(T user) {
-        jpaUserRepository.save((DBUser) user);
+    @SuppressWarnings("unchecked")
+    public <T extends User> T save(T user) {
+        DBUser dbUser = (DBUser) user;
+        return (T) jpaUserRepository.save(dbUser);
     }
 
     @Override
