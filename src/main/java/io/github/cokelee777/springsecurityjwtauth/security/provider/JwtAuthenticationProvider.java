@@ -2,6 +2,7 @@ package io.github.cokelee777.springsecurityjwtauth.security.provider;
 
 import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtAuthenticationToken;
 import io.github.cokelee777.springsecurityjwtauth.security.service.JwtUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -11,15 +12,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider, JwtAuthenticationManager {
 
     private final JwtUserDetailsService jwtUserDetailsService;
     private final PasswordEncoder passwordEncoder;
-
-    public JwtAuthenticationProvider(JwtUserDetailsService jwtUserDetailsService, PasswordEncoder passwordEncoder) {
-        this.jwtUserDetailsService = jwtUserDetailsService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

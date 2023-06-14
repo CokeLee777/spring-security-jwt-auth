@@ -2,6 +2,7 @@ package io.github.cokelee777.springsecurityjwtauth.security.auth;
 
 import io.github.cokelee777.springsecurityjwtauth.entity.User;
 import io.github.cokelee777.springsecurityjwtauth.enums.UserRole;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,13 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class JwtUserDetails implements UserDetails {
 
     private final User user;
-
-    public JwtUserDetails(User user) {
-        this.user = user;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

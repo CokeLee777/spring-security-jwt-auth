@@ -2,8 +2,13 @@ package io.github.cokelee777.springsecurityjwtauth.entity;
 
 import io.github.cokelee777.springsecurityjwtauth.enums.UserRole;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+@RequiredArgsConstructor
 public class DBUser implements User {
 
     @Id @GeneratedValue
@@ -11,24 +16,16 @@ public class DBUser implements User {
     private Long id;
 
     @Column(name = "identifier")
-    private String identifier;
+    private final String identifier;
 
     @Column(name = "password")
-    private String password;
+    private final String password;
 
     @Column(name = "nickname")
-    private String nickname;
+    private final String nickname;
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.ROLE_USER;
-
-    protected DBUser() { }
-
-    public DBUser(String identifier, String password, String nickname) {
-        this.identifier = identifier;
-        this.password = password;
-        this.nickname = nickname;
-    }
 
     public DBUser(String identifier, String password, String nickname, UserRole role) {
         this.identifier = identifier;

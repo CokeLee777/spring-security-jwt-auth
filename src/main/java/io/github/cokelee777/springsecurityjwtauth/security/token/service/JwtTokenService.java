@@ -5,19 +5,15 @@ import io.github.cokelee777.springsecurityjwtauth.security.token.domain.JwtAcces
 import io.github.cokelee777.springsecurityjwtauth.security.token.domain.JwtRefreshToken;
 import io.github.cokelee777.springsecurityjwtauth.security.token.extractor.JwtTokenExtractor;
 import io.github.cokelee777.springsecurityjwtauth.security.token.provider.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class JwtTokenService implements JwtAccessTokenService, JwtRefreshTokenService, JwtTokenDecryptService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtTokenExtractor jwtTokenExtractor;
-
-    public JwtTokenService(JwtTokenProvider jwtMemoryTokenProvider,
-                           JwtTokenExtractor jwtMemoryTokenExtractor) {
-        this.jwtTokenProvider = jwtMemoryTokenProvider;
-        this.jwtTokenExtractor = jwtMemoryTokenExtractor;
-    }
 
     @Override
     public JwtAccessToken issueAccessToken(JwtUserDetails jwtUserDetails) {

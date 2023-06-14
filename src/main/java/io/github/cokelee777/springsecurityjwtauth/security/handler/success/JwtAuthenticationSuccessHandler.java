@@ -7,6 +7,7 @@ import io.github.cokelee777.springsecurityjwtauth.security.token.service.JwtAcce
 import io.github.cokelee777.springsecurityjwtauth.security.token.service.JwtRefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -14,17 +15,12 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationSuccessHandler
         implements AuthenticationSuccessHandler, DefaultAuthenticationSuccessMessageProvider {
 
     private final JwtAccessTokenService jwtAccessTokenService;
     private final JwtRefreshTokenService jwtRefreshTokenService;
-
-    public JwtAuthenticationSuccessHandler(
-            JwtAccessTokenService jwtAccessTokenService, JwtRefreshTokenService jwtRefreshTokenService) {
-        this.jwtAccessTokenService = jwtAccessTokenService;
-        this.jwtRefreshTokenService = jwtRefreshTokenService;
-    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

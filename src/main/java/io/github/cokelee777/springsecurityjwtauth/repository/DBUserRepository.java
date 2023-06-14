@@ -3,20 +3,17 @@ package io.github.cokelee777.springsecurityjwtauth.repository;
 import io.github.cokelee777.springsecurityjwtauth.annotations.DataBase;
 import io.github.cokelee777.springsecurityjwtauth.entity.DBUser;
 import io.github.cokelee777.springsecurityjwtauth.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 @DataBase
+@Repository
+@RequiredArgsConstructor
 public class DBUserRepository implements UserRepository {
 
     private final JpaUserRepository jpaUserRepository;
-
-    public DBUserRepository(JpaUserRepository jpaUserRepository) {
-        this.jpaUserRepository = jpaUserRepository;
-    }
-
 
     @Override
     @SuppressWarnings("unchecked")

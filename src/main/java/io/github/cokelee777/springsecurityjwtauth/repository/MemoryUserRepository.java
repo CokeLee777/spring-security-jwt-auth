@@ -3,20 +3,18 @@ package io.github.cokelee777.springsecurityjwtauth.repository;
 import io.github.cokelee777.springsecurityjwtauth.annotations.Memory;
 import io.github.cokelee777.springsecurityjwtauth.entity.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
 @Memory
+@Repository
+@RequiredArgsConstructor
 public class MemoryUserRepository implements UserRepository {
 
     private final Map<String, MemoryUser> memoryStore;
-
-    public MemoryUserRepository(Map<String, MemoryUser> memoryStore) {
-        this.memoryStore = memoryStore;
-    }
 
     @Override
     @SuppressWarnings("unchecked")
