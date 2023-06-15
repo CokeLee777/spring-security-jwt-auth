@@ -11,6 +11,7 @@ import io.github.cokelee777.springsecurityjwtauth.security.handler.success.JwtLo
 import io.github.cokelee777.springsecurityjwtauth.security.provider.JwtAuthenticationProvider;
 import io.github.cokelee777.springsecurityjwtauth.security.token.service.JwtAccessTokenService;
 import io.github.cokelee777.springsecurityjwtauth.security.token.service.JwtTokenDecryptService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class JwtSecurityConfiguration {
 
     private static final String LOGOUT_END_POINT = "/users/sign-out";
@@ -36,24 +38,6 @@ public class JwtSecurityConfiguration {
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final JwtLogoutHandler jwtLogoutHandler;
     private final JwtLogoutSuccessHandler jwtLogoutSuccessHandler;
-
-    public JwtSecurityConfiguration(JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler,
-                                    JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler,
-                                    JwtAccessDeniedHandler jwtAccessDeniedHandler,
-                                    JwtAccessTokenService jwtAccessTokenService,
-                                    JwtTokenDecryptService jwtTokenDecryptService,
-                                    JwtAuthenticationProvider jwtAuthenticationProvider,
-                                    JwtLogoutHandler jwtLogoutHandler,
-                                    JwtLogoutSuccessHandler jwtLogoutSuccessHandler) {
-        this.jwtAuthenticationSuccessHandler = jwtAuthenticationSuccessHandler;
-        this.jwtAuthenticationFailureHandler = jwtAuthenticationFailureHandler;
-        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-        this.jwtAccessTokenService = jwtAccessTokenService;
-        this.jwtTokenDecryptService = jwtTokenDecryptService;
-        this.jwtAuthenticationProvider = jwtAuthenticationProvider;
-        this.jwtLogoutHandler = jwtLogoutHandler;
-        this.jwtLogoutSuccessHandler = jwtLogoutSuccessHandler;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

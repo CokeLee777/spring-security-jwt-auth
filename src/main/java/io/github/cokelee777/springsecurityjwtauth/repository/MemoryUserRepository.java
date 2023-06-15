@@ -1,23 +1,26 @@
 package io.github.cokelee777.springsecurityjwtauth.repository;
 
+import io.github.cokelee777.springsecurityjwtauth.annotations.Memory;
 import io.github.cokelee777.springsecurityjwtauth.entity.MemoryUser;
-import io.github.cokelee777.springsecurityjwtauth.entity.User;
+import io.github.cokelee777.springsecurityjwtauth.exception.DuplicatedUserException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 import java.util.Optional;
 
-public class MemoryUserRepository implements UserRepository {
+@Memory
+@Repository
+@RequiredArgsConstructor
+public class MemoryUserRepository implements UserRepository<MemoryUser> {
 
     private final Map<String, MemoryUser> memoryStore;
 
-    public MemoryUserRepository(Map<String, MemoryUser> memoryStore) {
-        this.memoryStore = memoryStore;
-    }
-
     @Override
-    public <T extends User> void save(T user) {
-        MemoryUser memoryUser = (MemoryUser) user;
-        memoryStore.putIfAbsent(memoryUser.getId().toString(), memoryUser);
+    public MemoryUser save(MemoryUser user) {
+        MemoryUser oldMemoryUser = memoryStore.putIfAbsent(user.getId().toString(), user);
+        if(oldMemoryUser != null) throw new DuplicatedUserException("이미 존재하는 사용자 입니다");
+        return user;
     }
 
     @Override
@@ -27,9 +30,8 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T extends User> Optional<T> findByIdentifier(String identifier) {
-        return (Optional<T>) memoryStore.values().stream()
+    public Optional<MemoryUser> findByIdentifier(String identifier) {
+        return memoryStore.values().stream()
             .filter(user -> user.getIdentifier().equals(identifier))
             .findFirst();
     }

@@ -3,21 +3,18 @@ package io.github.cokelee777.springsecurityjwtauth.security.token.extractor;
 import io.github.cokelee777.springsecurityjwtauth.entity.User;
 import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtUserDetails;
 import io.github.cokelee777.springsecurityjwtauth.security.token.decoder.JwtTokenDecoder;
-import io.github.cokelee777.springsecurityjwtauth.service.UserServiceImpl;
+import io.github.cokelee777.springsecurityjwtauth.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.MalformedJwtException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenExtractor {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final JwtTokenDecoder jwtTokenDecoder;
-
-    public JwtTokenExtractor(UserServiceImpl userService, JwtTokenDecoder jwtTokenDecoder) {
-        this.userService = userService;
-        this.jwtTokenDecoder = jwtTokenDecoder;
-    }
 
     public JwtUserDetails extractAccessToken(String accessToken) {
         Claims claims = jwtTokenDecoder.decodeAccessToken(accessToken);
