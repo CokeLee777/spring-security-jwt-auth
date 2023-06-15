@@ -2,6 +2,7 @@ package io.github.cokelee777.springsecurityjwtauth.repository;
 
 import io.github.cokelee777.springsecurityjwtauth.annotations.Memory;
 import io.github.cokelee777.springsecurityjwtauth.entity.MemoryUser;
+import io.github.cokelee777.springsecurityjwtauth.exception.DuplicatedUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,9 @@ public class MemoryUserRepository implements UserRepository<MemoryUser> {
 
     @Override
     public MemoryUser save(MemoryUser user) {
-        return memoryStore.putIfAbsent(user.getId().toString(), user);
+        MemoryUser oldMemoryUser = memoryStore.putIfAbsent(user.getId().toString(), user);
+        if(oldMemoryUser != null) throw new DuplicatedUserException("이미 존재하는 사용자 입니다");
+        return user;
     }
 
     @Override

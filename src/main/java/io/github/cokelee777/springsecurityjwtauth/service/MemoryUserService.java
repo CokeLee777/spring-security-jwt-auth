@@ -7,7 +7,7 @@ import io.github.cokelee777.springsecurityjwtauth.entity.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.exception.DuplicateIdentifierException;
 import io.github.cokelee777.springsecurityjwtauth.exception.UserNotFoundException;
 import io.github.cokelee777.springsecurityjwtauth.repository.MemoryUserRepository;
-import io.github.cokelee777.springsecurityjwtauth.service.common.PasswordBcryptService;
+import io.github.cokelee777.springsecurityjwtauth.utils.PasswordUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class MemoryUserService implements UserService {
 
         MemoryUser memoryUser = new MemoryUser(
                 signUpRequestDto.identifier(),
-                PasswordBcryptService.bcryptPassword(signUpRequestDto.password()),
+                PasswordUtils.bcrypt(signUpRequestDto.password()),
                 signUpRequestDto.nickname());
         MemoryUser savedMemoryUser = memoryUserRepository.save(memoryUser);
         return SignUpResponseDto.fromUser(savedMemoryUser);

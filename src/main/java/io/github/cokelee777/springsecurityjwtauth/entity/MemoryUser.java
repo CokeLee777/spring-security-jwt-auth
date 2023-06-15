@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @EqualsAndHashCode
+@RequiredArgsConstructor
 public class MemoryUser implements User {
 
     private String id = createUUID();
@@ -16,7 +16,9 @@ public class MemoryUser implements User {
     private final String nickname;
     private UserRole role = UserRole.ROLE_USER;
 
+
     public MemoryUser(String identifier, String password, String nickname, UserRole role) {
+        this.id = createUUID();
         this.identifier = identifier;
         this.password = password;
         this.nickname = nickname;

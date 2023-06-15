@@ -1,5 +1,6 @@
 package io.github.cokelee777.springsecurityjwtauth;
 
+import io.github.cokelee777.springsecurityjwtauth.annotations.DataBase;
 import io.github.cokelee777.springsecurityjwtauth.annotations.Memory;
 import io.github.cokelee777.springsecurityjwtauth.entity.MemoryUser;
 import org.springframework.boot.SpringApplication;
@@ -12,8 +13,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SpringBootApplication
-@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Memory.class))
-//@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = DataBase.class))
+//@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Memory.class))
+@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = DataBase.class))
 public class SpringSecurityJwtAuthApplication {
 
     public static void main(String[] args) {
