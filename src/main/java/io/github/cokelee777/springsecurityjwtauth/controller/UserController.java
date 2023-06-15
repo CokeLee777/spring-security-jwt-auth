@@ -4,7 +4,6 @@ import io.github.cokelee777.springsecurityjwtauth.dto.GetProfileResponseDto;
 import io.github.cokelee777.springsecurityjwtauth.dto.SignUpRequestDto;
 import io.github.cokelee777.springsecurityjwtauth.dto.SignUpResponseDto;
 import io.github.cokelee777.springsecurityjwtauth.dto.common.SuccessResponseBody;
-import io.github.cokelee777.springsecurityjwtauth.entity.User;
 import io.github.cokelee777.springsecurityjwtauth.enums.UserRole;
 import io.github.cokelee777.springsecurityjwtauth.security.auth.JwtUserDetails;
 import io.github.cokelee777.springsecurityjwtauth.service.UserService;
@@ -25,9 +24,7 @@ public class UserController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<SuccessResponseBody<SignUpResponseDto>> signUp(@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
-        User user = userService.createUser(signUpRequestDto);
-        SignUpResponseDto signUpResponseDto = new SignUpResponseDto(
-                user.getId(), user.getIdentifier(), user.getNickname(), user.getRole());
+        SignUpResponseDto signUpResponseDto = userService.createUser(signUpRequestDto);
         return ResponseEntity.ok()
                 .body(new SuccessResponseBody<>(
                         HttpStatus.OK.name(),

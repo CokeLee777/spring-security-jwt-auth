@@ -1,16 +1,13 @@
 package io.github.cokelee777.springsecurityjwtauth.service.common;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
 public class PasswordBcryptService {
 
-    private final PasswordEncoder passwordEncoder;
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public String bcryptPassword(String originalPassword) {
+    public static String bcryptPassword(String originalPassword) {
         return passwordEncoder.encode(originalPassword);
     }
 }

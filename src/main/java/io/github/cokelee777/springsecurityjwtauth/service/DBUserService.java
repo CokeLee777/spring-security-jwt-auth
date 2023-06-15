@@ -2,6 +2,7 @@ package io.github.cokelee777.springsecurityjwtauth.service;
 
 import io.github.cokelee777.springsecurityjwtauth.annotations.DataBase;
 import io.github.cokelee777.springsecurityjwtauth.dto.SignUpRequestDto;
+import io.github.cokelee777.springsecurityjwtauth.dto.SignUpResponseDto;
 import io.github.cokelee777.springsecurityjwtauth.entity.DBUser;
 import io.github.cokelee777.springsecurityjwtauth.exception.DuplicateIdentifierException;
 import io.github.cokelee777.springsecurityjwtauth.exception.UserNotFoundException;
@@ -16,11 +17,9 @@ import org.springframework.stereotype.Service;
 public class DBUserService implements UserService {
 
     private final DBUserRepository dbUserRepository;
-    private final PasswordBcryptService passwordBcryptService;
 
     @Override
-    @SuppressWarnings("unchecked")
-    public DBUser createUser(SignUpRequestDto signUpRequestDto) {
+    public SignUpResponseDto createUser(SignUpRequestDto signUpRequestDto) {
         boolean isDuplicated = dbUserRepository.existsByIdentifier(signUpRequestDto.identifier());
         if(isDuplicated) {
             throw new DuplicateIdentifierException("중복된 아이디 입니다");
@@ -28,9 +27,10 @@ public class DBUserService implements UserService {
 
         DBUser dbUser = new DBUser(
                 signUpRequestDto.identifier(),
-                passwordBcryptService.bcryptPassword(signUpRequestDto.password()),
+                PasswordBcryptService.bcryptPassword(signUpRequestDto.password()),
                 signUpRequestDto.nickname());
-        return dbUserRepository.save(dbUser);
+        DBUser savedDBUser = dbUserRepository.save(dbUser);
+        return SignUpResponseDto.fromUser(savedDBUser);
     }
 
     @Override

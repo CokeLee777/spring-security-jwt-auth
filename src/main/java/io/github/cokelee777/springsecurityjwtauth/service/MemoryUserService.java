@@ -2,6 +2,7 @@ package io.github.cokelee777.springsecurityjwtauth.service;
 
 import io.github.cokelee777.springsecurityjwtauth.annotations.Memory;
 import io.github.cokelee777.springsecurityjwtauth.dto.SignUpRequestDto;
+import io.github.cokelee777.springsecurityjwtauth.dto.SignUpResponseDto;
 import io.github.cokelee777.springsecurityjwtauth.entity.MemoryUser;
 import io.github.cokelee777.springsecurityjwtauth.exception.DuplicateIdentifierException;
 import io.github.cokelee777.springsecurityjwtauth.exception.UserNotFoundException;
@@ -16,11 +17,9 @@ import org.springframework.stereotype.Service;
 public class MemoryUserService implements UserService {
 
     private final MemoryUserRepository memoryUserRepository;
-    private final PasswordBcryptService passwordBcryptService;
 
     @Override
-    @SuppressWarnings("unchecked")
-    public MemoryUser createUser(SignUpRequestDto signUpRequestDto) {
+    public SignUpResponseDto createUser(SignUpRequestDto signUpRequestDto) {
         boolean isDuplicated = memoryUserRepository.existsByIdentifier(signUpRequestDto.identifier());
         if(isDuplicated) {
             throw new DuplicateIdentifierException("중복된 아이디 입니다");
@@ -28,9 +27,10 @@ public class MemoryUserService implements UserService {
 
         MemoryUser memoryUser = new MemoryUser(
                 signUpRequestDto.identifier(),
-                passwordBcryptService.bcryptPassword(signUpRequestDto.password()),
+                PasswordBcryptService.bcryptPassword(signUpRequestDto.password()),
                 signUpRequestDto.nickname());
-        return memoryUserRepository.save(memoryUser);
+        MemoryUser savedMemoryUser = memoryUserRepository.save(memoryUser);
+        return SignUpResponseDto.fromUser(savedMemoryUser);
     }
 
     @Override
