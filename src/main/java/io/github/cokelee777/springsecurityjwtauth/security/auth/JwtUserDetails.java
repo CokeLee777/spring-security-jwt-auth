@@ -51,7 +51,7 @@ public class JwtUserDetails implements UserDetails {
     }
 
     public Object getId() {
-        return Long.parseLong(user.getId().toString());
+        return user.getId();
     }
 
     public String getNickname() {

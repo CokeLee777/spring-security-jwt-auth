@@ -25,10 +25,10 @@ public class JwtAuthenticationSuccessHandler
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        JwtUserDetails jwtMemoryUserDetails = (JwtUserDetails) authentication.getPrincipal();
+        JwtUserDetails jwtUserDetails = (JwtUserDetails) authentication.getPrincipal();
 
-        JwtAccessToken accessToken = jwtAccessTokenService.issueAccessToken(jwtMemoryUserDetails);
-        JwtRefreshToken refreshToken = jwtRefreshTokenService.issueRefreshToken(jwtMemoryUserDetails);
+        JwtAccessToken accessToken = jwtAccessTokenService.issueAccessToken(jwtUserDetails);
+        JwtRefreshToken refreshToken = jwtRefreshTokenService.issueRefreshToken(jwtUserDetails);
 
         setHeaderWithJwtAccessToken(response, accessToken);
         setCookieWithJwtRefreshToken(response, refreshToken);
