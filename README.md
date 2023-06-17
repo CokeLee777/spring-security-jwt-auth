@@ -62,9 +62,9 @@ Spring Boot, Spring security, jjwt 를 사용하여 jwt, auth를 지원하는 ap
 ### 2. 프로젝트 세팅(Set your project)
 
 1. 우선, build.gradle 파일의 내용에 따라 spring boot 개발 환경을 세팅하세요.
-2. [application.properties](http://application.properties/) 내에 아래와 같은 코드를 작성합니다. (이 프로젝트에는 기본적으로 해당 코드가 포함되어 있습니다.)
+2. [application.properties](src/main/resources/application.yml) 내에 아래와 같은 코드를 작성합니다. (이 프로젝트에는 기본적으로 해당 코드가 포함되어 있습니다.)
 
-```
+```yml
 # 커스텀 NOT FOUND ERROR를 생성하기 위해 기본 page not found exception 제거
 spring:
   mvc:
@@ -72,19 +72,18 @@ spring:
   web:
     resources:
       add-mappings: false
-	datasource:
-	    driver-class-name: com.mysql.cj.jdbc.Driver
-	    url: jdbc:mysql://"your domain or ip address":"your port number"/"your database name"
-	    username: "database username"
-	    password: "database user password"
-	  jpa:
-	    generate-ddl: true
-	    hibernate:
-	      ddl-auto: create
-	    properties:
-	      hibernate:
-	        format_sql: true
-	
+  datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://"your domain or ip address":"your port number"/"your database name"
+      username: "database username"
+      password: "database user password"
+  jpa:
+      generate-ddl: true
+      hibernate:
+        ddl-auto: create
+      properties:
+        hibernate:
+          format_sql: true
 ```
 
 1. 당신의 보안 전략에 맞는 폴더를 프로젝트에 적용시킵니다.
@@ -130,7 +129,7 @@ spring:
 
 **[대략적인 인증 흐름]**
 
-![./asset/images/authentication_flow_diagram.png](./asset/images/authentication_flow_diagram.png)
+![authentication_flow_diagram](./asset/images/authentication_flow_diagram.png)
 
 **[실제 인증 흐름]**
 
@@ -148,7 +147,7 @@ spring:
 
 **[대략적인 인증 흐름]**
 
-![./asset/images/authorization_flow_diagram.png](./asset/images/authorization_flow_diagram.png)
+![authorization_flow_diagram](./asset/images/authorization_flow_diagram.png)
 
 **[실제 인증 흐름]**
 
@@ -167,7 +166,7 @@ spring:
 
 **[대략적인 인증 흐름]**
 
-![./asset/images/signout_flow_diagram.png](./asset/images/signout_flow_diagram.png)
+![signout_flow_diagram](./asset/images/signout_flow_diagram.png)
 
 **[실제 인증 흐름]**
 
@@ -231,7 +230,7 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](notion://www.notion.so/LICENSE) for more information.
+Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
