@@ -92,13 +92,13 @@ spring:
     - `Choose your security strategy` 단계에서 선택한 전략에 맞게 `SpringSecurityJwtAuthApplication` 파일에서 어노테이션을 선택하여야 합니다.
         - Memory를 사용하는 경우
         
-        ```docker
+        ```java
         @ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = DataBase.class))
         ```
         
         - Database를 사용하는 경우
         
-        ```docker
+        ```java
         @ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Memory.class))
         ```
         
@@ -178,10 +178,6 @@ spring:
     - 액세스 토큰이 있는 헤더는 클라이언트가 헤더에서 삭제하도록 합니다.
 5. 모든 과정이 성공적으로 마쳤다면 304 MOVED PERMANENTLY(/users/sign-in) 응답을 내보내게 됩니다.
 
-## [기능 정의서(**Functional Specification)**](https://github.com/CokeLee777/spring-security-jwt-auth/wiki/Functional-Specification)
-
-## [API 명세서(API Specification)](https://github.com/CokeLee777/spring-security-jwt-auth/wiki/API-Specification)
-
 ## 객체 지향 프로그래밍
 
 이 프로젝트는 OOP(객체 지향 프로그래밍)를 지향하며 설계 및 개발되었습니다.
@@ -214,6 +210,10 @@ spring:
 
 - 의존성역전의 원칙에 따라 상위 모듈을 가장 추상적인 인터페이스로 추상화 하여 하위 모듈에 의존하지 않도록 설계하였습니다.
 - 이 프로젝트는 2가지의 Database 전략을 제공하기 때문에 2가지의 User 엔티티를 제공합니다. 이에 따라 2가지 User에 대한 Service를 구현하였습니다. 이 때 최상위 인터페이스인 `UserService` 인터페이스를 통해 추상화 하였고, 메서드의 반환값에 Generic을 사용하여 새로운 Database 전략을 추가 하더라도 User 인터페이스를 구현한 User 관련 엔티티 클래스를 반환하는 방식으로 `UserService`를 새롭게 구현할 수 있도록 설계하였습니다.
+
+## [기능 정의서(**Functional Specification)**](https://github.com/CokeLee777/spring-security-jwt-auth/wiki/Functional-Specification)
+
+## [API 명세서(API Specification)](https://github.com/CokeLee777/spring-security-jwt-auth/wiki/API-Specification)
 
 ## **기여하는 방법(How to contribute?)**
 
